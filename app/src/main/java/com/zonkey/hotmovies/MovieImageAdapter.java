@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
+
 
 public class MovieImageAdapter extends BaseAdapter {
 
@@ -16,6 +18,7 @@ public class MovieImageAdapter extends BaseAdapter {
     public MovieImageAdapter(Context movieContext) {
         mContext = movieContext;
     }
+
 
     public int getCount() {
         return mMovieThumbIds.length;
@@ -45,6 +48,10 @@ public class MovieImageAdapter extends BaseAdapter {
         }
         posterImageView.setImageResource(mMovieThumbIds[moviePosterPosition]);
 
+        Picasso.with(mContext).load(mItems.get(position)).into(image);
+
+
+
         return posterImageView;
     }
 
@@ -63,3 +70,4 @@ public class MovieImageAdapter extends BaseAdapter {
 
     };
 }
+
