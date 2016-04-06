@@ -1,6 +1,5 @@
 package com.zonkey.hotmovies;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.zonkey.hotmovies.json.MovieTags;
+import com.zonkey.hotmovies.models.Movie;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,9 +24,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MoviePosterFragment extends Fragment {
+
+    //The correct urls for popular and highest rated
+    private final String POPULARITY_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
+    private final String HIGHEST_RATED_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
+
+    private GridView moviePosterGridView;
 
 
     public MoviePosterFragment() {
@@ -37,9 +47,7 @@ public class MoviePosterFragment extends Fragment {
         //inflate the view from the specified fragment layout
         View rootView = inflater.inflate(R.layout.fragment_movie_poster_main, container, false);
         //delare the GridView contained in the fragment_movie_poster_main layout
-        GridView moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
-        //uses the view to get the context instead of getActivity
-        moviePosterGridView.setAdapter(new MovieImageAdapter(rootView.getContext()));
+        moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
 
 
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,7 +55,6 @@ public class MoviePosterFragment extends Fragment {
                                     int position, long id) {
                 Toast.makeText(getActivity(), "" + position,
                         Toast.LENGTH_SHORT).show();
-                updateMovies();
             }
         });
 
@@ -58,9 +65,7 @@ public class MoviePosterFragment extends Fragment {
      * this method updates the movies from the task created below
      */
     private void updateMovies() {
-        FetchMoviesTask movieTask = new FetchMoviesTask();
-        movieTask.execute();
-
+        new FetchMoviesTask().execute(POPULARITY_URL);
     }
 
     //This ensures the movies refresh when this fragment is started
@@ -70,52 +75,48 @@ public class MoviePosterFragment extends Fragment {
         updateMovies();
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
 
         /**
-         * Take the String representing the complete forecast in JSON Format and
-         * pull out the data we need to construct the Strings needed for the wireframes.
-         * <p/>
-         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
-         * into an Object hierarchy for us.
+         * @param movieInfoJsonStr
+         * @return
+         * @throws JSONException
          */
-        private String[] getMovieDataFromJson(String movieInfoJsonStr, int numMovies)
+        private List<Movie> getMovieDataFromJson(String movieInfoJsonStr)
                 throws JSONException {
 
-            // These are the names of the JSON objects that need to be extracted.
-            final String MDB_POSTER = "poster_path";
 
-            //declaring the json objects
-            JSONObject jsonMoviePoster = new JSONObject(movieInfoJsonStr);
-            JSONArray movieArray = jsonMoviePoster.getJSONArray(MDB_POSTER);
+            //declaring the json object that we will call all the info we need from
+            JSONObject jsonMovieInfo = new JSONObject(movieInfoJsonStr);
+            //"results" is the child of the root json object ("results" is an array inside the Json object (as noted by [])
+            JSONArray resultsArray = jsonMovieInfo.getJSONArray(MovieTags.RESULTS);
 
-            //creating a string from the json objects
-            String[] posterResultsStr = new String[numMovies];
-            for (int i = 0; i < movieArray.length(); i++) {
-                // For now, using the format just "poster"
-                String poster;
+            //we need to go through each object within the resultsArray and get each value that we need for things we need, poster, description, title
 
-                // poster is in a child array
-                JSONObject posterObject = jsonMoviePoster.getJSONArray(MDB_POSTER).getJSONObject(0);
-                poster = posterObject.getString(MDB_POSTER);
+            //iterate over the JsonArray creating a movie object for each Json object in the Array
+            List<Movie> movieList = new ArrayList<>();
+            for (int i = 0; i < resultsArray.length(); i++) {
+                // for every object in this array we need to create a movie object
+                JSONObject movieObject = resultsArray.getJSONObject(i);
+                Movie movie = new Movie(
+                        movieObject.getString(MovieTags.POSTER),
+                        movieObject.getString(MovieTags.TITLE),
+                        movieObject.getString(MovieTags.OVERVIEW));
 
-                posterResultsStr[i] = poster;
-
+                //this adds the big ol object we just created
+                movieList.add(movie);
             }
-
-            for (String s : posterResultsStr) {
-            }
-            return posterResultsStr;
+            return movieList;
 
 
         }
 
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected List<Movie> doInBackground(String... params) {
             //if there's no code there's nothing to lookup. Verify size of Params
             if (params.length == 0) {
                 return null;
@@ -128,35 +129,21 @@ public class MoviePosterFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String posterJsonStr = null;
-            int numMovies = 25;
-
-
-            //this is the param as defined in the API
-            String poster = "poster_path";
 
             try {
                 // Construct the URL for the movieDb query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://docs.themoviedb.apiary.io/#
-                final String MOVIE_INFO_BASE_URL = "https://api.themoviedb.org/3/movie/";
-                final String MOVIE_ID_PARAM = "id";//the unique id of each movie
-                final String APPID_PARAM = "?api_key";//my api key
-                final String POSTER_PARAM = "poster_path";//the link to the corresponding movie poster
-
 
                 //This is where the link with the info we seek is actually created
-                Uri builtUri = Uri.parse(MOVIE_INFO_BASE_URL).buildUpon()
-                        .appendQueryParameter(MOVIE_ID_PARAM, params[0])
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.MOVIE_DB_API_KEY)
-                        .appendQueryParameter(POSTER_PARAM, poster)
-                        .build();
+
 
                 //this is where the URL is created
-                URL url = new URL(builtUri.toString());
-                //thisi s for logging it
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                URL url = new URL(params[0]);
+                //this s for logging it
+                Log.v(LOG_TAG, "Built URI " + params[0]);
 
-                // Create the request to OpenWeatherMap, and open the connection
+                // Create the request to MovieDB, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -206,7 +193,7 @@ public class MoviePosterFragment extends Fragment {
                 }
             }
             try {
-                return getMovieDataFromJson(posterJsonStr, numMovies);
+                return getMovieDataFromJson(posterJsonStr);
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -218,7 +205,15 @@ public class MoviePosterFragment extends Fragment {
 
         }
 
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            if (moviePosterGridView != null && movies != null) {
+                moviePosterGridView.setAdapter(new MovieImageAdapter(getContext(), movies));
+            }else{
+                Toast.makeText(getActivity(), "you ain't got no movies", Toast.LENGTH_SHORT).show();
+            }
 
+        }
     }
 }
 

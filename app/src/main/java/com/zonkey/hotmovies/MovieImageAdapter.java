@@ -4,24 +4,30 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
+import com.zonkey.hotmovies.models.Movie;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MovieImageAdapter extends BaseAdapter {
 
 
     private Context mContext;
-    ImageView posterImageView;
+    private List<Movie> mMovieList;
 
 
-    public MovieImageAdapter(Context movieContext) {
+    public MovieImageAdapter(Context movieContext, List<Movie> movieList) {
         mContext = movieContext;
+        mMovieList = new ArrayList<>(movieList);
     }
 
-
     public int getCount() {
-        return mMovieThumbIds.length;
+        return mMovieList.size();
     }
 
     public Object getItem(int moviePosterPosition) {
@@ -35,39 +41,25 @@ public class MovieImageAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int moviePosterPosition, View convertView, ViewGroup parent) {
+        ImageView posterImageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             posterImageView = new ImageView(mContext);
             posterImageView.setAdjustViewBounds(true);
-//            imageView.setLayoutParams(new GridView.LayoutParams(170, 170));
+            posterImageView.setLayoutParams(new GridView.LayoutParams(170, 170));
             posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //            imageView.setPadding(8, 8, 8, 8);
         } else {
             posterImageView = (ImageView) convertView;
 
         }
-        posterImageView.setImageResource(mMovieThumbIds[moviePosterPosition]);
-
-        Picasso.with(mContext).load(mItems.get(position)).into(image);
-
-
+        Movie movie = mMovieList.get(moviePosterPosition);
+        Picasso.with(mContext).setLoggingEnabled(true);
+        Picasso.with(mContext).load(movie.getPosterURL()).into(posterImageView);
 
         return posterImageView;
     }
 
 
-    // references to our images
-    private Integer[] mMovieThumbIds = {
-            R.drawable.sample1, R.drawable.sample2, R.drawable.sample8,
-            R.drawable.sample2, R.drawable.sample4, R.drawable.sample7,
-            R.drawable.sample3, R.drawable.sample8, R.drawable.sample6,
-            R.drawable.sample4, R.drawable.sample6, R.drawable.sample5,
-            R.drawable.sample5, R.drawable.sample7, R.drawable.sample4,
-            R.drawable.sample6, R.drawable.sample3, R.drawable.sample3,
-            R.drawable.sample7, R.drawable.sample5, R.drawable.sample2,
-            R.drawable.sample8, R.drawable.sample1, R.drawable.sample1,
-
-
-    };
 }
 
