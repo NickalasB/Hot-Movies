@@ -21,4 +21,7 @@ public class Movie {
 
         return String.format("http://image.tmdb.org/t/p/w500%s", poster_path);
     }
+
+
+
 }

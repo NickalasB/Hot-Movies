@@ -1,10 +1,16 @@
 package com.zonkey.hotmovies;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,8 +37,9 @@ import java.util.List;
 public class MoviePosterFragment extends Fragment {
 
     //The correct urls for popular and highest rated
-    private final String POPULARITY_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
-    private final String HIGHEST_RATED_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
+    private final String POPULARITY_URL = "http://api.themoviedb.org/3/movie/popular?api_key=cc19772c03a449027eaa0cb6559f304a";
+    private final String HIGHEST_RATED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=cc19772c03a449027eaa0cb6559f304a";
+
 
     private GridView moviePosterGridView;
 
@@ -40,6 +47,48 @@ public class MoviePosterFragment extends Fragment {
     public MoviePosterFragment() {
         // Required empty public constructor
     }
+
+
+    @Override public void onCreate (Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        //ensures that a menu is happening in this fragment or activity
+        setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_highest_rated:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else
+                    item.setChecked(true);
+                new FetchMoviesTask().execute(HIGHEST_RATED_URL);
+                return true;
+            case R.id.action_popular:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else
+                    item.setChecked(true);
+                new FetchMoviesTask().execute(POPULARITY_URL);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +102,11 @@ public class MoviePosterFragment extends Fragment {
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+
+                Intent detailIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+                startActivity(detailIntent);
+
+
                 Toast.makeText(getActivity(), "" + position,
                         Toast.LENGTH_SHORT).show();
             }
@@ -65,8 +119,27 @@ public class MoviePosterFragment extends Fragment {
      * this method updates the movies from the task created below
      */
     private void updateMovies() {
-        new FetchMoviesTask().execute(POPULARITY_URL);
+
+         final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+
+        FetchMoviesTask movieTask = new FetchMoviesTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        declares and retrieves the sort key from shared preferences
+
+        String sortBy = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
+         
+
+        if (sortBy == null && sortBy.isEmpty()){
+            sortBy = POPULARITY_URL;
+        }else{
+            sortBy = HIGHEST_RATED_URL;
+        }
+        movieTask.execute(sortBy); //gets the sort option from shared preferences
+
+        Log.v(LOG_TAG, "SAVED URL " + sortBy);
+
     }
+
 
     //This ensures the movies refresh when this fragment is started
     @Override
@@ -132,15 +205,14 @@ public class MoviePosterFragment extends Fragment {
 
             try {
                 // Construct the URL for the movieDb query
-                // Possible parameters are available at OWM's forecast API page, at
+                // Possible parameters are available at MovieDB's API page, at
                 // http://docs.themoviedb.apiary.io/#
-
-                //This is where the link with the info we seek is actually created
 
 
                 //this is where the URL is created
                 URL url = new URL(params[0]);
-                //this s for logging it
+
+                //this is for logging it
                 Log.v(LOG_TAG, "Built URI " + params[0]);
 
                 // Create the request to MovieDB, and open the connection
@@ -215,5 +287,6 @@ public class MoviePosterFragment extends Fragment {
 
         }
     }
+
 }
 

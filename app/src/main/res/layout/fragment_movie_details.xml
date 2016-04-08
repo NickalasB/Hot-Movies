@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_red_dark"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.zonkey.hotmovies.MovieDetailFragment">
+
+
+    <ImageView
+        android:id="@+id/detail_poster_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sample1" />
+
+    <LinearLayout
+        android:id="@+id/detail_linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/detail_poster_imageView"
+        android:orientation="vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
+            android:id="@+id/detail_movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The 5th Wave"
+            android:textColor="@android:color/white"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/detail_release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Original Release: August, 2015"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/detail_user_rating_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average User Rating"
+            android:textColor="@android:color/white" />
+
+        <RatingBar
+            android:id="@+id/detail_ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/detail_movie_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_poster_imageView"
+        android:text="Fearing the actions of a god-like Super Hero left unchecked, Gotham City’s own formidable, forceful vigilante takes on Metropolis’s most revered, modern-day savior, while the world wrestles with what sort of hero it really needs. And with Batman and Superman at war with one another, a new threat quickly arises, putting mankind in greater danger than it’s ever known before."
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>
+

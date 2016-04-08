@@ -6,6 +6,8 @@ package com.zonkey.hotmovies.json;
 public class MovieTags {
 
     // These are the names of the JSON objects that need to be extracted.
+
+    public static final String MOVIE_BASE_URL ="http://api.themoviedb.org/3/movie";
     public static final String RESULTS = "results";
     public static final String POSTER = "poster_path";
     public static final String TITLE = "original_title";

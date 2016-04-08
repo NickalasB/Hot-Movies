@@ -8,7 +8,11 @@
     <string name="action_popular">Most Popular</string>
     <string name="action_ratings">Highest Rated</string>
 
+    <!--Key name for sort option in MoviePosterFragment [CHAR LIMIT=NONE]-->
+    <string name="pref_sort_key" translatable="false">sortBy</string>
 
+    <!--Default sort option for sort preferences [CHAR LIMIT=NONE]-->
+    <string name="pref_sort_default" translatable="false">Popularity</string>
 
 
 </resources>
