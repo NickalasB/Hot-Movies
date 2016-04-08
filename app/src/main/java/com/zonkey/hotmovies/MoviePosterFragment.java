@@ -41,6 +41,11 @@ public class MoviePosterFragment extends Fragment {
     private final String HIGHEST_RATED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=cc19772c03a449027eaa0cb6559f304a";
 
 
+    //Strings and ints for SharedPreferences
+    private static String SORT_ORDER = "sort_order";
+    private static final int SORT_ORDER_POPULAR = 0;
+    private static final int SORT_ORDER_HIGHEST_RATED = 1;
+
     private GridView moviePosterGridView;
 
 
@@ -53,6 +58,7 @@ public class MoviePosterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this fragment or activity
         setHasOptionsMenu(true);
+        updateMovies();
 
     }
 
@@ -68,12 +74,19 @@ public class MoviePosterFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //this gets the default shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         switch (id) {
             case R.id.action_highest_rated:
                 if (item.isChecked())
                     item.setChecked(false);
                 else
                     item.setChecked(true);
+                //this stores the shared preference for the HIGHEST RATED option
+                sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_HIGHEST_RATED).apply();
+
                 new FetchMoviesTask().execute(HIGHEST_RATED_URL);
                 return true;
             case R.id.action_popular:
@@ -81,6 +94,9 @@ public class MoviePosterFragment extends Fragment {
                     item.setChecked(false);
                 else
                     item.setChecked(true);
+                //this stores the shared preference for the POPULAR option
+                sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_POPULAR).apply();
+
                 new FetchMoviesTask().execute(POPULARITY_URL);
                 return true;
             default:
@@ -120,23 +136,28 @@ public class MoviePosterFragment extends Fragment {
      */
     private void updateMovies() {
 
-         final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+        final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
         FetchMoviesTask movieTask = new FetchMoviesTask();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        declares and retrieves the sort key from shared preferences
 
-        String sortBy = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
-         
+        //this SETS the default shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int sortOrder = sharedPreferences.getInt(SORT_ORDER, SORT_ORDER_POPULAR);
 
-        if (sortBy == null && sortBy.isEmpty()){
-            sortBy = POPULARITY_URL;
-        }else{
-            sortBy = HIGHEST_RATED_URL;
+        switch (sortOrder) {
+            case SORT_ORDER_POPULAR:
+                //query popular URL here
+                movieTask.execute(POPULARITY_URL); //gets the sort option from shared preferences
+                break;
+            case SORT_ORDER_HIGHEST_RATED:
+                //query top rated URL here
+                movieTask.execute(HIGHEST_RATED_URL); //gets the sort option from shared preferences
+
+                break;
         }
-        movieTask.execute(sortBy); //gets the sort option from shared preferences
 
-        Log.v(LOG_TAG, "SAVED URL " + sortBy);
+
+        Log.v(LOG_TAG, "SAVED URL " + sortOrder);
 
     }
 
