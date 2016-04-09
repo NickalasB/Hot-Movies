@@ -19,7 +19,7 @@ public class Movie {
     //this method constructs the base URL plus the "poster_path" defined in the API
     public String getPosterURL() {
 
-        return String.format("http://image.tmdb.org/t/p/w500%s", poster_path);
+        return String.format("http://image.tmdb.org/t/p/w185%s", poster_path);
     }
 
 

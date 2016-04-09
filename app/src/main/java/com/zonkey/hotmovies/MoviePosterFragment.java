@@ -58,8 +58,6 @@ public class MoviePosterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this fragment or activity
         setHasOptionsMenu(true);
-        updateMovies();
-
     }
 
     @Override
