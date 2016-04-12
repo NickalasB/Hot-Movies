@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 public class MovieDetailFragment extends Fragment {
@@ -14,6 +16,13 @@ public class MovieDetailFragment extends Fragment {
     private String movieSummary;
     private String movieRating;
     private String movieReleaseDate;
+
+
+    ImageView posterDetailImageView;
+    TextView movieTitleTextView;
+    TextView movieSummaryTextView;
+    TextView movieRatingTextView;
+    TextView movieReleaseDateTextView;
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -28,9 +37,33 @@ public class MovieDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
         getActivity().setTitle("Details");
 
-
+        getPosterDetailImageView();
+        getMovieTitleTextView();
+        getMovieSummaryTextView();
+        getMovieRatingTextView();
+        getMovieReleaseDateTextView();
 
         return rootView;
+    }
+
+    public ImageView getPosterDetailImageView() {
+        return posterDetailImageView;
+    }
+
+    public TextView getMovieTitleTextView() {
+        return movieTitleTextView;
+    }
+
+    public TextView getMovieSummaryTextView() {
+        return movieSummaryTextView;
+    }
+
+    public TextView getMovieRatingTextView() {
+        return movieRatingTextView;
+    }
+
+    public TextView getMovieReleaseDateTextView() {
+        return movieReleaseDateTextView;
     }
 
 }

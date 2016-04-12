@@ -9,9 +9,13 @@ public class MovieTags {
 
     public static final String MOVIE_BASE_URL ="http://api.themoviedb.org/3/movie";
     public static final String RESULTS = "results";
+
     public static final String POSTER = "poster_path";
     public static final String TITLE = "original_title";
     public static final String OVERVIEW = "overview";
+    public static  String ID = "id";
+    public static  String VOTE_COUNT = "vote_count";
+    public static  String RELEASE_DATE = "release_date";
 
 
 }

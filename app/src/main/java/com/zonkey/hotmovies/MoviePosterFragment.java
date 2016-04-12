@@ -196,7 +196,10 @@ public class MoviePosterFragment extends Fragment {
                 Movie movie = new Movie(
                         movieObject.getString(MovieTags.POSTER),
                         movieObject.getString(MovieTags.TITLE),
-                        movieObject.getString(MovieTags.OVERVIEW));
+                        movieObject.getString(MovieTags.OVERVIEW),
+                        movieObject.getInt(MovieTags.ID),
+                        movieObject.getString(MovieTags.VOTE_COUNT),
+                        movieObject.getString(MovieTags.RELEASE_DATE));
 
                 //this adds the big ol object we just created
                 movieList.add(movie);
