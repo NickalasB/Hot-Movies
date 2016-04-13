@@ -36,6 +36,7 @@ import java.util.List;
 
 public class MoviePosterFragment extends Fragment {
 
+    public static final String MOVIE = "movie";
     //The correct urls for popular and highest rated
     private final String POPULARITY_URL = "http://api.themoviedb.org/3/movie/popular?api_key=cc19772c03a449027eaa0cb6559f304a";
     private final String HIGHEST_RATED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=cc19772c03a449027eaa0cb6559f304a";
@@ -47,6 +48,7 @@ public class MoviePosterFragment extends Fragment {
     private static final int SORT_ORDER_HIGHEST_RATED = 1;
 
     private GridView moviePosterGridView;
+    private MovieImageAdapter mMovieImageAdapter;
 
 
     public MoviePosterFragment() {
@@ -54,7 +56,8 @@ public class MoviePosterFragment extends Fragment {
     }
 
 
-    @Override public void onCreate (Bundle savedInstanceState){
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this fragment or activity
         setHasOptionsMenu(true);
@@ -103,7 +106,6 @@ public class MoviePosterFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,6 +120,7 @@ public class MoviePosterFragment extends Fragment {
                                     int position, long id) {
 
                 Intent detailIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+                detailIntent.putExtra(MOVIE, mMovieImageAdapter.getItem(position));
                 startActivity(detailIntent);
 
 
@@ -199,7 +202,8 @@ public class MoviePosterFragment extends Fragment {
                         movieObject.getString(MovieTags.OVERVIEW),
                         movieObject.getInt(MovieTags.ID),
                         movieObject.getString(MovieTags.VOTE_COUNT),
-                        movieObject.getString(MovieTags.RELEASE_DATE));
+                        movieObject.getString(MovieTags.RELEASE_DATE),
+                        movieObject.getString(MovieTags.BACKDROP_PATH));
 
                 //this adds the big ol object we just created
                 movieList.add(movie);
@@ -302,8 +306,9 @@ public class MoviePosterFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             if (moviePosterGridView != null && movies != null) {
-                moviePosterGridView.setAdapter(new MovieImageAdapter(getContext(), movies));
-            }else{
+                mMovieImageAdapter = new MovieImageAdapter(getContext(), movies);
+                moviePosterGridView.setAdapter(mMovieImageAdapter);
+            } else {
                 Toast.makeText(getActivity(), "you ain't got no movies", Toast.LENGTH_SHORT).show();
             }
 

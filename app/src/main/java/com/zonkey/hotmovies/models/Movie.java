@@ -8,23 +8,25 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    // these are just objects
+
     public String poster_path;
     public String title;
     public String overview;
     public int id;
     public String vote_count;
     public String release_date;
+    public String backdrop_path;
 
 
 
-    public Movie(String poster_path, String title, String overview, int id, String vote_count, String release_date) {
+    public Movie(String poster_path, String title, String overview, int id, String vote_count, String release_date, String backdrop_path) {
         this.poster_path = poster_path;
         this.title = title;
         this.overview = overview;
         this.id = id;
         this.vote_count = vote_count;
         this.release_date = release_date;
+        this.backdrop_path = backdrop_path;
 
     }
 
@@ -34,6 +36,10 @@ public class Movie implements Parcelable {
         return String.format("http://image.tmdb.org/t/p/w185%s", poster_path);
     }
 
+    public String getBackdropURL() {
+
+        return String.format("http://image.tmdb.org/t/p/w185%s", backdrop_path);
+    }
 
     @Override
     public int describeContents() {
@@ -48,6 +54,7 @@ public class Movie implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.vote_count);
         dest.writeString(this.release_date);
+        dest.writeString(this.backdrop_path);
     }
 
     protected Movie(Parcel in) {
@@ -57,6 +64,8 @@ public class Movie implements Parcelable {
         this.id = in.readInt();
         this.vote_count = in.readString();
         this.release_date = in.readString();
+        this.backdrop_path = in.readString();
+
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

@@ -16,6 +16,6 @@ public class MovieTags {
     public static  String ID = "id";
     public static  String VOTE_COUNT = "vote_count";
     public static  String RELEASE_DATE = "release_date";
-
+    public static  String BACKDROP_PATH = "release_date";
 
 }

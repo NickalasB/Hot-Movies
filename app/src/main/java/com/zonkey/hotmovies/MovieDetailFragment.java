@@ -8,21 +8,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.zonkey.hotmovies.models.Movie;
+
 
 public class MovieDetailFragment extends Fragment {
 
-    private String movieTitle;
-    private String moviePosterURL;
-    private String movieSummary;
-    private String movieRating;
-    private String movieReleaseDate;
-
-
     ImageView posterDetailImageView;
+    ImageView backdropDetailImageview;
     TextView movieTitleTextView;
     TextView movieSummaryTextView;
     TextView movieRatingTextView;
     TextView movieReleaseDateTextView;
+    private Movie movie;
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -35,35 +33,36 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        getActivity().setTitle("Details");
-
-        getPosterDetailImageView();
-        getMovieTitleTextView();
-        getMovieSummaryTextView();
-        getMovieRatingTextView();
-        getMovieReleaseDateTextView();
+        posterDetailImageView = (ImageView) rootView.findViewById(R.id.detail_poster_imageView);
+        backdropDetailImageview = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageView);
+        movieTitleTextView = (TextView) rootView.findViewById(R.id.detail_movie_title);
+        movieSummaryTextView = (TextView) rootView.findViewById(R.id.detail_movie_overview);
+        movieRatingTextView = (TextView) rootView.findViewById(R.id.detail_user_rating_text);
+        movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date);
 
         return rootView;
     }
 
-    public ImageView getPosterDetailImageView() {
-        return posterDetailImageView;
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
-    public TextView getMovieTitleTextView() {
-        return movieTitleTextView;
+    @Override
+    public void onStart() {
+        super.onStart();
+        displayMovie();
     }
 
-    public TextView getMovieSummaryTextView() {
-        return movieSummaryTextView;
-    }
+    private void displayMovie() {
+        if (movie != null) {
+            movieTitleTextView.setText(movie.title);
+            movieSummaryTextView.setText(movie.overview);
+            movieRatingTextView.setText(movie.vote_count);
+            movieReleaseDateTextView.setText(movie.release_date);
+            Picasso.with(getContext()).load(movie.getPosterURL()).into(posterDetailImageView);
 
-    public TextView getMovieRatingTextView() {
-        return movieRatingTextView;
-    }
 
-    public TextView getMovieReleaseDateTextView() {
-        return movieReleaseDateTextView;
+        }
     }
-
 }

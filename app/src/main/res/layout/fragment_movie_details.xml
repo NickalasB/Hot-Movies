@@ -15,18 +15,27 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_backdrop_imageView"/>
+
+
+
 
     <ImageView
         android:id="@+id/detail_poster_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/sample1" />
+        android:src="@drawable/sample1"
+        android:layout_below="@+id/detail_backdrop_imageView"/>
 
     <LinearLayout
         android:id="@+id/detail_linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/detail_poster_imageView"
+        android:layout_below="@+id/detail_backdrop_imageView"
         android:orientation="vertical"
         android:paddingEnd="16dp"
         android:paddingStart="16dp">
