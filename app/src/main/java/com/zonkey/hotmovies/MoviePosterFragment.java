@@ -50,6 +50,8 @@ public class MoviePosterFragment extends Fragment {
     private GridView moviePosterGridView;
     private MovieImageAdapter mMovieImageAdapter;
 
+    static final String STATE_MOVIES = "movieTask";
+
 
     public MoviePosterFragment() {
         // Required empty public constructor
@@ -61,6 +63,11 @@ public class MoviePosterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this fragment or activity
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -129,9 +136,11 @@ public class MoviePosterFragment extends Fragment {
 
         final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
+
         FetchMoviesTask movieTask = new FetchMoviesTask();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         int sortOrder = sharedPreferences.getInt(SORT_ORDER, SORT_ORDER_POPULAR);
+
 
         switch (sortOrder) {
             case SORT_ORDER_POPULAR:
