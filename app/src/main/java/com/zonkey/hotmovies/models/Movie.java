@@ -14,30 +14,38 @@ public class Movie implements Parcelable {
     public String overview;
     public int id;
     public String vote_count;
+    public String vote_average;
     public String release_date;
     public String backdrop_path;
 
 
-
-    public Movie(String poster_path, String title, String overview, int id, String vote_count, String release_date, String backdrop_path) {
+    public Movie(String poster_path,
+                 String title,
+                 String overview,
+                 int id,
+                 String vote_count,
+                 String vote_average,
+                 String release_date,
+                 String backdrop_path) {
         this.poster_path = poster_path;
         this.title = title;
         this.overview = overview;
         this.id = id;
         this.vote_count = vote_count;
+        this.vote_average = vote_average;
         this.release_date = release_date;
         this.backdrop_path = backdrop_path;
 
     }
 
-    //this method constructs the base URL plus the "poster_path" defined in the API
+    //this  constructs the base URL plus the "poster_path" defined in the API
     public String getPosterURL() {
 
         return String.format("http://image.tmdb.org/t/p/w185%s", poster_path);
     }
 
+    //this constructs the base URL plus the "poster_path" defined in the API- it is not yet implemented
     public String getBackdropURL() {
-
         return String.format("http://image.tmdb.org/t/p/w185%s", backdrop_path);
     }
 
@@ -53,6 +61,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.overview);
         dest.writeInt(this.id);
         dest.writeString(this.vote_count);
+        dest.writeString(this.vote_average);
         dest.writeString(this.release_date);
         dest.writeString(this.backdrop_path);
     }
@@ -63,6 +72,7 @@ public class Movie implements Parcelable {
         this.overview = in.readString();
         this.id = in.readInt();
         this.vote_count = in.readString();
+        this.vote_average = in.readString();
         this.release_date = in.readString();
         this.backdrop_path = in.readString();
 

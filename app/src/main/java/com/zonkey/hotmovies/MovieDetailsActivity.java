@@ -16,7 +16,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         MovieDetailFragment detailFragment = (MovieDetailFragment) getSupportFragmentManager().findFragmentById(R.id.movie_details_fragment);
         detailFragment.setMovie(currentMovie);
-        setTitle("Details");
+        setTitle(getString(R.string.details_title));
 
 
 

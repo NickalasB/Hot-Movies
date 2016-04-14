@@ -76,7 +76,6 @@ public class MoviePosterFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //this gets the default shared preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         switch (id) {
@@ -85,7 +84,6 @@ public class MoviePosterFragment extends Fragment {
                     item.setChecked(false);
                 else
                     item.setChecked(true);
-                //this stores the shared preference for the HIGHEST RATED option
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_HIGHEST_RATED).apply();
 
                 new FetchMoviesTask().execute(HIGHEST_RATED_URL);
@@ -95,7 +93,6 @@ public class MoviePosterFragment extends Fragment {
                     item.setChecked(false);
                 else
                     item.setChecked(true);
-                //this stores the shared preference for the POPULAR option
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_POPULAR).apply();
 
                 new FetchMoviesTask().execute(POPULARITY_URL);
@@ -111,10 +108,7 @@ public class MoviePosterFragment extends Fragment {
                              Bundle savedInstanceState) {
         //inflate the view from the specified fragment layout
         View rootView = inflater.inflate(R.layout.fragment_movie_poster_main, container, false);
-        //delare the GridView contained in the fragment_movie_poster_main layout
         moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
-
-
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -122,10 +116,6 @@ public class MoviePosterFragment extends Fragment {
                 Intent detailIntent = new Intent(getActivity(), MovieDetailsActivity.class);
                 detailIntent.putExtra(MOVIE, mMovieImageAdapter.getItem(position));
                 startActivity(detailIntent);
-
-
-                Toast.makeText(getActivity(), "" + position,
-                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -140,8 +130,6 @@ public class MoviePosterFragment extends Fragment {
         final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
         FetchMoviesTask movieTask = new FetchMoviesTask();
-
-        //this SETS the default shared preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         int sortOrder = sharedPreferences.getInt(SORT_ORDER, SORT_ORDER_POPULAR);
 
@@ -153,15 +141,12 @@ public class MoviePosterFragment extends Fragment {
             case SORT_ORDER_HIGHEST_RATED:
                 //query top rated URL here
                 movieTask.execute(HIGHEST_RATED_URL); //gets the sort option from shared preferences
-
-                break;
+               break;
         }
-
 
         Log.v(LOG_TAG, "SAVED URL " + sortOrder);
 
     }
-
 
     //This ensures the movies refresh when this fragment is started
     @Override
@@ -174,23 +159,14 @@ public class MoviePosterFragment extends Fragment {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
-
-        /**
-         * @param movieInfoJsonStr
-         * @return
-         * @throws JSONException
-         */
         private List<Movie> getMovieDataFromJson(String movieInfoJsonStr)
                 throws JSONException {
-
-
             //declaring the json object that we will call all the info we need from
             JSONObject jsonMovieInfo = new JSONObject(movieInfoJsonStr);
             //"results" is the child of the root json object ("results" is an array inside the Json object (as noted by [])
             JSONArray resultsArray = jsonMovieInfo.getJSONArray(MovieTags.RESULTS);
 
-            //we need to go through each object within the resultsArray and get each value that we need for things we need, poster, description, title
-
+            //we need to go through each object within the resultsArray and get each value that we need for things we need
             //iterate over the JsonArray creating a movie object for each Json object in the Array
             List<Movie> movieList = new ArrayList<>();
             for (int i = 0; i < resultsArray.length(); i++) {
@@ -202,15 +178,14 @@ public class MoviePosterFragment extends Fragment {
                         movieObject.getString(MovieTags.OVERVIEW),
                         movieObject.getInt(MovieTags.ID),
                         movieObject.getString(MovieTags.VOTE_COUNT),
+                        movieObject.getString(MovieTags.VOTE_AVERAGE),
                         movieObject.getString(MovieTags.RELEASE_DATE),
                         movieObject.getString(MovieTags.BACKDROP_PATH));
 
-                //this adds the big ol object we just created
+                //this adds it all up into the big ol object we just created
                 movieList.add(movie);
             }
             return movieList;
-
-
         }
 
 
@@ -230,10 +205,6 @@ public class MoviePosterFragment extends Fragment {
             String posterJsonStr = null;
 
             try {
-                // Construct the URL for the movieDb query
-                // Possible parameters are available at MovieDB's API page, at
-                // http://docs.themoviedb.apiary.io/#
-
 
                 //this is where the URL is created
                 URL url = new URL(params[0]);
@@ -275,7 +246,7 @@ public class MoviePosterFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the movie data, there's no point in attempting
                 // to parse it.
                 return null;
             } finally {
@@ -309,7 +280,7 @@ public class MoviePosterFragment extends Fragment {
                 mMovieImageAdapter = new MovieImageAdapter(getContext(), movies);
                 moviePosterGridView.setAdapter(mMovieImageAdapter);
             } else {
-                Toast.makeText(getActivity(), "you ain't got no movies", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.poster_fragment_movies_error), Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -1,81 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.zonkey.hotmovies.MovieDetailFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_red_dark">
+    tools:context="com.zonkey.hotmovies.MovieDetailFragment">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
-
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_backdrop_imageView"/>
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
+        <ImageView
+            android:id="@+id/detail_backdrop_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-
-
-    <ImageView
-        android:id="@+id/detail_poster_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sample1"
-        android:layout_below="@+id/detail_backdrop_imageView"/>
-
-    <LinearLayout
-        android:id="@+id/detail_linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/detail_poster_imageView"
-        android:layout_below="@+id/detail_backdrop_imageView"
-        android:orientation="vertical"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp">
-
-        <TextView
-            android:id="@+id/detail_movie_title"
+        <ImageView
+            android:id="@+id/detail_poster_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="The 5th Wave"
+            android:layout_below="@+id/detail_backdrop_imageView" />
+
+        <LinearLayout
+            android:id="@+id/detail_linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail_backdrop_imageView"
+            android:layout_toEndOf="@id/detail_poster_imageView"
+            android:layout_toRightOf="@id/detail_poster_imageView"
+            android:orientation="vertical"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:id="@+id/detail_movie_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/detail_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/detail_user_rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/detail_vote_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/detail_movie_overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_poster_imageView"
+            android:paddingTop="16dp"
             android:textColor="@android:color/white"
-            android:textSize="28sp" />
+            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/detail_release_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Original Release: August, 2015"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/detail_user_rating_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Average User Rating"
-            android:textColor="@android:color/white" />
-
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/detail_movie_overview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:layout_below="@id/detail_poster_imageView"
-        android:text="Fearing the actions of a god-like Super Hero left unchecked, Gotham City’s own formidable, forceful vigilante takes on Metropolis’s most revered, modern-day savior, while the world wrestles with what sort of hero it really needs. And with Batman and Superman at war with one another, a new threat quickly arises, putting mankind in greater danger than it’s ever known before."
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
-
-
-</RelativeLayout>
+    </RelativeLayout>
 </ScrollView>
