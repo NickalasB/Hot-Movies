@@ -1,5 +1,7 @@
 package com.zonkey.hotmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zonkey.hotmovies.models.Movie;
@@ -22,6 +25,7 @@ public class MovieDetailFragment extends Fragment {
     TextView movieTotalRatingsTextView;
     TextView movieReleaseDateTextView;
     private Movie movie;
+
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -42,6 +46,19 @@ public class MovieDetailFragment extends Fragment {
         movieTotalRatingsTextView = (TextView) rootView.findViewById(R.id.detail_vote_count_text);
         movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date);
 
+        posterDetailImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (posterDetailImageView != null) {
+                    Toast.makeText(getActivity(), "This will eventually work", Toast.LENGTH_SHORT).show();
+//                    Intent trailerIntent = new Intent(getActivity(), MovieTrailerActivity.class);
+                    Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
+                    trailerIntent.setData(Uri.parse(movie.getTrailerUrl()));
+                    startActivity(trailerIntent);
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -54,11 +71,15 @@ public class MovieDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         displayMovie();
+
     }
+
 
     private void displayMovie() {
         if (movie != null) {
-            Picasso.with(getContext()).load(movie.getPosterURL()).into(posterDetailImageView);
+            Picasso.with(getContext())
+                    .load(movie.getPosterURL())
+                    .into(posterDetailImageView);
             movieTitleTextView.setText(movie.title);
             movieReleaseDateTextView.setText("Release date: " + movie.release_date);
             movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
@@ -67,4 +88,5 @@ public class MovieDetailFragment extends Fragment {
 
         }
     }
+
 }
