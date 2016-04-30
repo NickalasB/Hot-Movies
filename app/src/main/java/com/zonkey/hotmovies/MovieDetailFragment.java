@@ -29,8 +29,6 @@ public class MovieDetailFragment extends Fragment {
     TextView movieReviewAuthorTextView;
     TextView movieReviewsTextView;
     private Movie movie;
-    private Reviews reviews;
-
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -98,10 +96,13 @@ public class MovieDetailFragment extends Fragment {
             movieSummaryTextView.setText(movie.overview);
 
         }
-        if (reviews != null){
+
+        Reviews reviews = movie.getFirstReview();
+        if (reviews != null) {
             movieReviewAuthorTextView.setText("By: " + reviews.author);
             movieReviewsTextView.setText(reviews.content);
         }
+
 
     }
 

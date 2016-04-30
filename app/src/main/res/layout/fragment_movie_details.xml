@@ -42,7 +42,8 @@
             android:layout_toRightOf="@id/detail_poster_imageView"
             android:orientation="vertical"
             android:paddingEnd="16dp"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/detail_movie_title"
@@ -86,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/detail_movie_overview"
-            android:paddingBottom="16dp"
+            android:paddingBottom="8dp"
             android:text="@string/details_reviews_title"
             android:textColor="@android:color/white"
             android:textSize="24sp"

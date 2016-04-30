@@ -24,7 +24,6 @@ public class Movie implements Parcelable {
     public List<Reviews> reviews = new ArrayList<>();
 
 
-
     public Movie(String poster_path,
                  String title,
                  String overview,
@@ -57,14 +56,13 @@ public class Movie implements Parcelable {
     }
 
 
-
     public void setTrailers(List<Trailer> trailers) {
         this.trailers = trailers;
     }
 
 
     public String getTrailerUrl() {
-        if (trailers.size() > 0){
+        if (trailers.size() > 0) {
             return trailers.get(0).getTrailerURL();
         }
         return null;
@@ -75,7 +73,14 @@ public class Movie implements Parcelable {
         this.reviews = reviews;
     }
 
+    public Reviews getFirstReview() {
+        if (reviews.size() == 0) {
+            return null;
+        } else {
+            return reviews.get(0);
+        }
 
+    }
 
     @Override
     public int describeContents() {
