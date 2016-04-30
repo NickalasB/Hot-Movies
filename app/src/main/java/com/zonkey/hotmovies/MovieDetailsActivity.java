@@ -15,10 +15,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
 
         Movie currentMovie = getIntent().getParcelableExtra(MoviePosterFragment.MOVIE);
-
         MovieDetailFragment detailFragment = (MovieDetailFragment) getSupportFragmentManager().findFragmentById(R.id.movie_details_fragment);
         detailFragment.setMovie(currentMovie);
         setTitle(getString(R.string.details_title));
+
 
 
 

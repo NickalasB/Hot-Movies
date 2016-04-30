@@ -24,6 +24,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/detail_backdrop_imageView" />
 
+        <TextView
+            android:id="@+id/detail_click_for_trailer_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_poster_imageView"
+            android:text="@string/details_click_for_trailer"
+            android:textColor="@android:color/white"
+            android:textStyle="bold|italic" />
+
         <LinearLayout
             android:id="@+id/detail_linearLayout"
             android:layout_width="wrap_content"
@@ -69,6 +78,33 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/detail_poster_imageView"
             android:paddingTop="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/detail_reviews_title_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_movie_overview"
+            android:paddingBottom="16dp"
+            android:text="@string/details_reviews_title"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/detail_reviews_author_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail_reviews_title_textView"
+            android:textColor="@android:color/white"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/detail_reviews_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_reviews_author_textView"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

@@ -21,6 +21,8 @@ public class Movie implements Parcelable {
     public String release_date;
     public String backdrop_path;
     public List<Trailer> trailers = new ArrayList<>();
+    public List<Reviews> reviews = new ArrayList<>();
+
 
 
     public Movie(String poster_path,
@@ -60,12 +62,20 @@ public class Movie implements Parcelable {
         this.trailers = trailers;
     }
 
+
     public String getTrailerUrl() {
         if (trailers.size() > 0){
             return trailers.get(0).getTrailerURL();
         }
         return null;
     }
+
+
+    public void setReviews(List<Reviews> reviews) {
+        this.reviews = reviews;
+    }
+
+
 
     @Override
     public int describeContents() {
@@ -83,6 +93,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.release_date);
         dest.writeString(this.backdrop_path);
         dest.writeTypedList(trailers);
+        dest.writeTypedList(reviews);
     }
 
     protected Movie(Parcel in) {
@@ -95,6 +106,7 @@ public class Movie implements Parcelable {
         this.release_date = in.readString();
         this.backdrop_path = in.readString();
         this.trailers = in.createTypedArrayList(Trailer.CREATOR);
+        this.reviews = in.createTypedArrayList(Reviews.CREATOR);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
