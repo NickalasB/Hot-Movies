@@ -3,6 +3,8 @@ package com.zonkey.hotmovies.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by nickbradshaw on 4/28/16.
  */
@@ -10,6 +12,9 @@ public class Reviews implements Parcelable {
 
     public String author;
     public String content;
+
+
+    private List<Reviews> reviews;
 
     public Reviews(String author, String content) {
         this.author = author;
