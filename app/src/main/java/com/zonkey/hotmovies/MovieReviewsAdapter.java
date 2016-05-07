@@ -1,6 +1,6 @@
 package com.zonkey.hotmovies;
 
-import android.support.v7.widget.CardView;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +17,23 @@ import java.util.List;
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.ReviewViewHolder> {
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
-        CardView cv;
+        TextView titleText;
         TextView reviewAuthor;
         TextView reviewText;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.reviews_card_view);
+            titleText = (TextView) itemView.findViewById(R.id.detail_reviews_title_textView);
             reviewAuthor = (TextView)itemView.findViewById(R.id.detail_reviews_author_textView);
             reviewText = (TextView)itemView.findViewById(R.id.detail_reviews_textView);
         }
     }
 
     List<Reviews> reviews;
+    LayoutInflater mLayoutInflater;
 
-    MovieReviewsAdapter(List<Reviews> reviews){
+    MovieReviewsAdapter(Context context, List<Reviews> reviews){
+        mLayoutInflater = LayoutInflater.from(context);
         this.reviews = reviews;
     }
 
@@ -41,16 +43,15 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     // passing the output to the constructor of the custom ViewHolder.
     @Override
     public ReviewViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_movie_details, viewGroup, false);
-        ReviewViewHolder reviewViewHolder = new ReviewViewHolder(v);
-        return reviewViewHolder;
+        View v = mLayoutInflater.inflate(R.layout.movie_review_card, viewGroup, false);
+        return new ReviewViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ReviewViewHolder reviewViewHolder, int i) {
-        reviewViewHolder.reviewAuthor.setText(reviews.get(i).author);
-        reviewViewHolder.reviewText.setText(reviews.get(i).content);
-
+        Reviews review = reviews.get(i);
+        reviewViewHolder.reviewAuthor.setText(review.author);
+        reviewViewHolder.reviewText.setText(review.content);
     }
 
     //This should return the number of items present in the data.

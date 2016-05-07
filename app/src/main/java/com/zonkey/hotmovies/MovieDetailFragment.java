@@ -19,7 +19,6 @@ import com.zonkey.hotmovies.models.Reviews;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MovieDetailFragment extends Fragment {
 
     ImageView posterDetailImageView;
@@ -36,15 +35,11 @@ public class MovieDetailFragment extends Fragment {
     private Movie movie;
 
     private RecyclerView reviewRecyclerView;
-    private List<Reviews> reviews;
-
 
     public MovieDetailFragment() {
         // Required empty public constructor
         setHasOptionsMenu(true);
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,15 +57,12 @@ public class MovieDetailFragment extends Fragment {
         movieReviewAuthorTextView = (TextView) rootView.findViewById(R.id.detail_reviews_author_textView);
         movieReviewsTextView = (TextView) rootView.findViewById(R.id.detail_reviews_textView);
 
-
         //where we handle the reviews RecyclerView
-        reviewRecyclerView = (RecyclerView)rootView.findViewById(R.id.reviews_recyclerView);
+        reviewRecyclerView = (RecyclerView) rootView.findViewById(R.id.reviews_recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
 
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(llm);
-        initializeReviewAdapter();
-        initializeReviewData();
 
         posterDetailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,48 +79,22 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
-
     public void setMovie(Movie movie) {
         this.movie = movie;
+        initializeReviewAdapter();
     }
 
-    //This this is wrong
-    private List<Reviews> createList(int size) {
-        List<Reviews> result = new ArrayList<Reviews>();
-        for (int i = 1; i <= size; i++) {
-            Reviews review = new Reviews();
-            review.author = review.author + i;
-            review.content = review.content + i;
-
-            result.add(review);
-
-        }
-
-        return result;
-    }
-    // This method creates an ArrayList that has two review objects
-    private void initializeReviewData(){
-        reviews = new ArrayList<>();
-        reviews.add(new Reviews(String author, String content));//how do I get the correct text from the API in there?
-
-    }
-
-
-    private void initializeReviewAdapter(){
-        MovieReviewsAdapter adapter = new MovieReviewsAdapter(reviews);
+    private void initializeReviewAdapter() {
+        List<Reviews> reviews = movie.reviews != null ? movie.reviews : new ArrayList<Reviews>();
+        MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
         reviewRecyclerView.setAdapter(adapter);
     }
-
-
 
     @Override
     public void onStart() {
         super.onStart();
         displayMovie();
-
     }
-
-
 
     private void displayMovie() {
 
@@ -142,19 +108,6 @@ public class MovieDetailFragment extends Fragment {
             movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
             movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
-
         }
-
-        Reviews reviews = movie.getFirstReview();
-        if (reviews != null) {
-            movieReviewAuthorTextView.setText("By: " + reviews.author);
-            movieReviewsTextView.setText(reviews.content);
-        }
-
-
-
-
     }
-
-
 }
