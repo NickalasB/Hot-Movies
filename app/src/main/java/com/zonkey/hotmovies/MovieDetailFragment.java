@@ -69,6 +69,8 @@ public class MovieDetailFragment extends Fragment {
 
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(llm);
+        initializeReviewAdapter();
+        initializeReviewData();
 
         posterDetailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,21 +90,35 @@ public class MovieDetailFragment extends Fragment {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
-        initializeReviewAdapter();
     }
 
-//
-//    private void initializeReviewAdapter(){
-//        List<Reviews> reviews = movie.reviews !=null ? movie.reviews : new ArrayList<Reviews>();
-//        MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
-//        reviewRecyclerView.setAdapter(adapter);
-//    }
+    //This this is wrong
+    private List<Reviews> createList(int size) {
+        List<Reviews> result = new ArrayList<Reviews>();
+        for (int i = 1; i <= size; i++) {
+            Reviews review = new Reviews();
+            review.author = review.author + i;
+            review.content = review.content + i;
 
-       private void initializeReviewAdapter() {
-             List<Reviews> reviews = movie.reviews != null ? movie.reviews : new ArrayList<Reviews>();
-                MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
+            result.add(review);
+
+        }
+
+        return result;
+    }
+    // This method creates an ArrayList that has two review objects
+    private void initializeReviewData(){
+        reviews = new ArrayList<>();
+        reviews.add(new Reviews(String author, String content));//how do I get the correct text from the API in there?
+
+    }
+
+
+    private void initializeReviewAdapter(){
+        MovieReviewsAdapter adapter = new MovieReviewsAdapter(reviews);
         reviewRecyclerView.setAdapter(adapter);
     }
+
 
 
     @Override
@@ -129,11 +145,11 @@ public class MovieDetailFragment extends Fragment {
 
         }
 
-//        Reviews reviews = movie.getFirstReview();
-//        if (reviews != null) {
-//            movieReviewAuthorTextView.setText("By: " + reviews.author);
-//            movieReviewsTextView.setText(reviews.content);
-//        }
+        Reviews reviews = movie.getFirstReview();
+        if (reviews != null) {
+            movieReviewAuthorTextView.setText("By: " + reviews.author);
+            movieReviewsTextView.setText(reviews.content);
+        }
 
 
 
