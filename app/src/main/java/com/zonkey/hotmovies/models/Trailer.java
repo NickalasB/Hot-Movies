@@ -31,6 +31,12 @@ public class Trailer implements Parcelable {
     }
 
 
+    //this constructs the base trailerImage URL plus the key from the youtube trailer
+    public String getTrailerImagerURL(){
+
+        return String.format("http://img.youtube.com/vi/" + key + "/0.jpg");
+    }
+
     @Override
     public int describeContents() {
         return 0;

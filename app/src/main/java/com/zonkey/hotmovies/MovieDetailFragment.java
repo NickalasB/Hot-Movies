@@ -13,8 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.zonkey.hotmovies.adapters.MovieReviewsAdapter;
+import com.zonkey.hotmovies.adapters.MovieTrailersAdapter;
 import com.zonkey.hotmovies.models.Movie;
 import com.zonkey.hotmovies.models.Reviews;
+import com.zonkey.hotmovies.models.Trailer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +36,14 @@ public class MovieDetailFragment extends Fragment {
     TextView movieReviewAuthorTextView;
     TextView movieReviewsTextView;
     private Movie movie;
+    private Trailer trailer;
 
     private RecyclerView reviewRecyclerView;
+    private RecyclerView trailerRecyclerView;
+
+//    private GridView trailerGridview;
+    private ImageView trailerImageView;
+
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -56,13 +65,31 @@ public class MovieDetailFragment extends Fragment {
         movieReviewAuthorTitleTextView = (TextView) rootView.findViewById(R.id.detail_reviews_title_textView);
         movieReviewAuthorTextView = (TextView) rootView.findViewById(R.id.detail_reviews_author_textView);
         movieReviewsTextView = (TextView) rootView.findViewById(R.id.detail_reviews_textView);
+        trailerImageView = (ImageView) rootView.findViewById(R.id.trailers_imageView);
+
 
         //where we handle the reviews RecyclerView
         reviewRecyclerView = (RecyclerView) rootView.findViewById(R.id.reviews_recyclerView);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        trailerRecyclerView = (RecyclerView) rootView.findViewById(R.id.trailer_recycler_view);
+
+
+        LinearLayoutManager reviewsLm = new LinearLayoutManager(getContext());
+//        LinearLayoutManager trailersLm = new LinearLayoutManager(getContext());
+
+        LinearLayoutManager trailersLm
+                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+
+        trailerRecyclerView.setHasFixedSize(true);
+        trailerRecyclerView.setLayoutManager(trailersLm);
+
 
         reviewRecyclerView.setHasFixedSize(true);
-        reviewRecyclerView.setLayoutManager(llm);
+        reviewRecyclerView.setLayoutManager(reviewsLm);
+
+
+//        trailerGridview = (GridView) rootView.findViewById(R.id.trailers_gridView);
+
 
         posterDetailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,12 +109,25 @@ public class MovieDetailFragment extends Fragment {
     public void setMovie(Movie movie) {
         this.movie = movie;
         initializeReviewAdapter();
+        initializeTrailerAdapter();
+    }
+
+    private void initializeTrailerAdapter() {
+        List<Trailer> trailers = movie.trailers != null ? movie.trailers : new ArrayList<Trailer>();
+        MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
+        trailerRecyclerView.setAdapter(trailerAdapter);
+
+//        List<Trailer> trailers = movie.trailers != null ? movie.trailers : new ArrayList<Trailer>();
+//        MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
+//        trailerGridview.setAdapter(trailerAdapter);
+
     }
 
     private void initializeReviewAdapter() {
         List<Reviews> reviews = movie.reviews != null ? movie.reviews : new ArrayList<Reviews>();
         MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
         reviewRecyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -108,6 +148,13 @@ public class MovieDetailFragment extends Fragment {
             movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
             movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
+            if (trailer != null) {
+                Picasso.with(getContext())
+                        .load(trailer.getTrailerImagerURL())
+                        .into(trailerImageView);
+            }
+
+
         }
     }
 }

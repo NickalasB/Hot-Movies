@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.zonkey.hotmovies.adapters.MovieImageAdapter;
 import com.zonkey.hotmovies.json.MovieTags;
 import com.zonkey.hotmovies.json.ReviewTags;
 import com.zonkey.hotmovies.json.TrailerTags;

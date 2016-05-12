@@ -1,4 +1,4 @@
-package com.zonkey.hotmovies;
+package com.zonkey.hotmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zonkey.hotmovies.R;
 import com.zonkey.hotmovies.models.Reviews;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     List<Reviews> reviews;
     LayoutInflater mLayoutInflater;
 
-    MovieReviewsAdapter(Context context, List<Reviews> reviews){
+    public MovieReviewsAdapter(Context context, List<Reviews> reviews){
         mLayoutInflater = LayoutInflater.from(context);
         this.reviews = reviews;
     }
@@ -50,7 +51,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     @Override
     public void onBindViewHolder(ReviewViewHolder reviewViewHolder, int i) {
         Reviews review = reviews.get(i);
-        reviewViewHolder.reviewAuthor.setText(review.author);
+        reviewViewHolder.reviewAuthor.setText("By: " + review.author);
         reviewViewHolder.reviewText.setText(review.content);
     }
 
