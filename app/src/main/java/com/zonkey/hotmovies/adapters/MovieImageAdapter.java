@@ -1,4 +1,4 @@
-package com.zonkey.hotmovies;
+package com.zonkey.hotmovies.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -29,8 +29,10 @@ public class MovieImageAdapter extends BaseAdapter {
         return mMovieList.size();
     }
 
-    public Object getItem(int moviePosterPosition) {
-        return null;
+    public Movie getItem(int moviePosterPosition) {
+
+
+        return mMovieList.get(moviePosterPosition);
     }
 
     public long getItemId(int moviePosterPosition) {
@@ -45,13 +47,11 @@ public class MovieImageAdapter extends BaseAdapter {
             // if it's not recycled, initialize some attributes
             posterImageView = new ImageView(mContext);
             posterImageView.setAdjustViewBounds(true);
-//            posterImageView.setLayoutParams(new GridView.LayoutParams(170, 170));
             posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            posterImageView.setPadding(8, 8, 8, 8);
         } else {
             posterImageView = (ImageView) convertView;
-
         }
+
         Movie movie = mMovieList.get(moviePosterPosition);
         Picasso.with(mContext).setLoggingEnabled(true);
         Picasso.with(mContext).load(movie.getPosterURL()).into(posterImageView);
