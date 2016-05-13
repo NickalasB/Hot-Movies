@@ -9,18 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zonkey.hotmovies.adapters.MovieReviewsAdapter;
 import com.zonkey.hotmovies.adapters.MovieTrailersAdapter;
 import com.zonkey.hotmovies.models.Movie;
-import com.zonkey.hotmovies.models.Reviews;
+import com.zonkey.hotmovies.models.Review;
 import com.zonkey.hotmovies.models.Trailer;
+import com.zonkey.hotmovies.retrievers.MovieRetriever;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements MovieRetriever.MovieRetrieverCallback {
 
     ImageView posterDetailImageView;
     ImageView backdropDetailImageView;
@@ -34,14 +36,9 @@ public class MovieDetailFragment extends Fragment {
     TextView movieReviewAuthorTextView;
     TextView movieReviewsTextView;
     private Movie movie;
-    private Trailer trailer;
 
     private RecyclerView reviewRecyclerView;
     private RecyclerView trailerRecyclerView;
-
-    //    private GridView trailerGridview;
-    private ImageView trailerImageView;
-
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -63,7 +60,6 @@ public class MovieDetailFragment extends Fragment {
         movieReviewAuthorTitleTextView = (TextView) rootView.findViewById(R.id.detail_reviews_title_textView);
         movieReviewAuthorTextView = (TextView) rootView.findViewById(R.id.detail_reviews_author_textView);
         movieReviewsTextView = (TextView) rootView.findViewById(R.id.detail_reviews_textView);
-        trailerImageView = (ImageView) rootView.findViewById(R.id.trailers_imageView);
 
 
         //where we handle the reviews RecyclerView
@@ -80,7 +76,6 @@ public class MovieDetailFragment extends Fragment {
         trailerRecyclerView.setHasFixedSize(true);
         trailerRecyclerView.setLayoutManager(trailersLm);
 
-
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
 
@@ -89,23 +84,30 @@ public class MovieDetailFragment extends Fragment {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
-        initializeReviewAdapter();
-        initializeTrailerAdapter();
+        new MovieRetriever(this).getMovie(movie.id);
+    }
+
+    @Override
+    public void onMovieRetrieved(final Movie movie) {
+        this.movie = movie;
+        displayMovie();
+    }
+
+    @Override
+    public void onError(final String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void initializeTrailerAdapter() {
         List<Trailer> trailers = movie.trailers != null ? movie.trailers : new ArrayList<Trailer>();
         MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
         trailerRecyclerView.setAdapter(trailerAdapter);
-
-
     }
 
     private void initializeReviewAdapter() {
-        List<Reviews> reviews = movie.reviews != null ? movie.reviews : new ArrayList<Reviews>();
+        List<Review> reviews = movie.mReviews != null ? movie.mReviews : new ArrayList<Review>();
         MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
         reviewRecyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -115,7 +117,6 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void displayMovie() {
-
         if (movie != null) {
             Picasso.with(getContext())
                     .load(movie.getPosterURL())
@@ -126,13 +127,9 @@ public class MovieDetailFragment extends Fragment {
             movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
             movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
-            if (trailer != null) {
-                Picasso.with(getContext())
-                        .load(trailer.getTrailerImagerURL())
-                        .into(trailerImageView);
-            }
 
-
+            initializeReviewAdapter();
+            initializeTrailerAdapter();
         }
     }
 }

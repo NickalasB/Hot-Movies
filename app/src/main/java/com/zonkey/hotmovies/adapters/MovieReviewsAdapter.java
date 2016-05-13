@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zonkey.hotmovies.R;
-import com.zonkey.hotmovies.models.Reviews;
+import com.zonkey.hotmovies.models.Review;
 
 import java.util.List;
 
@@ -30,12 +30,12 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         }
     }
 
-    List<Reviews> reviews;
+    List<Review> mReviews;
     LayoutInflater mLayoutInflater;
 
-    public MovieReviewsAdapter(Context context, List<Reviews> reviews){
+    public MovieReviewsAdapter(Context context, List<Review> reviews){
         mLayoutInflater = LayoutInflater.from(context);
-        this.reviews = reviews;
+        this.mReviews = reviews;
     }
 
     //this method is called when the custom ViewHolder needs to be initialized.
@@ -50,7 +50,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
     @Override
     public void onBindViewHolder(ReviewViewHolder reviewViewHolder, int i) {
-        Reviews review = reviews.get(i);
+        Review review = mReviews.get(i);
         reviewViewHolder.reviewAuthor.setText("By: " + review.author);
         reviewViewHolder.reviewText.setText(review.content);
     }
@@ -59,7 +59,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     // As our data is in the form of a List, we only need to call the size method on the List object
     @Override
     public int getItemCount() {
-        return reviews.size();
+        return mReviews.size();
     }
 
     @Override

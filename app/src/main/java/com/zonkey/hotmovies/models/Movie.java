@@ -3,6 +3,8 @@ package com.zonkey.hotmovies.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import java.util.List;
  * Created by nickbradshaw on 4/5/16.
  */
 public class Movie implements Parcelable {
-
 
     public String poster_path;
     public String title;
@@ -20,9 +21,10 @@ public class Movie implements Parcelable {
     public String vote_average;
     public String release_date;
     public String backdrop_path;
+    @SerializedName("videos")
     public List<Trailer> trailers = new ArrayList<>();
-    public List<Reviews> reviews = new ArrayList<>();
-
+    @SerializedName("reviews")
+    public List<Review> mReviews = new ArrayList<>();
 
     public Movie(String poster_path,
                  String title,
@@ -40,33 +42,23 @@ public class Movie implements Parcelable {
         this.vote_average = vote_average;
         this.release_date = release_date;
         this.backdrop_path = backdrop_path;
-
     }
 
-    //this  constructs the base URL plus the "poster_path" defined in the API
     public String getPosterURL() {
-
         return String.format("http://image.tmdb.org/t/p/w185%s", poster_path);
     }
 
-
-    //this constructs the base URL plus the "poster_path" defined in the API- it is not yet implemented
     public String getBackdropURL() {
         return String.format("http://image.tmdb.org/t/p/w185%s", backdrop_path);
     }
-
-
-
 
     public void setTrailers(List<Trailer> trailers) {
         this.trailers = trailers;
     }
 
-
-    public void setReviews(List<Reviews> reviews) {
-        this.reviews = reviews;
+    public void setReviews(List<Review> reviews) {
+        this.mReviews = reviews;
     }
-
 
     @Override
     public int describeContents() {
@@ -84,7 +76,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.release_date);
         dest.writeString(this.backdrop_path);
         dest.writeTypedList(trailers);
-        dest.writeTypedList(reviews);
+        dest.writeTypedList(mReviews);
     }
 
     protected Movie(Parcel in) {
@@ -97,7 +89,7 @@ public class Movie implements Parcelable {
         this.release_date = in.readString();
         this.backdrop_path = in.readString();
         this.trailers = in.createTypedArrayList(Trailer.CREATOR);
-        this.reviews = in.createTypedArrayList(Reviews.CREATOR);
+        this.mReviews = in.createTypedArrayList(Review.CREATOR);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

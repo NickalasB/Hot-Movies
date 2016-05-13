@@ -3,25 +3,19 @@ package com.zonkey.hotmovies.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 /**
  * Created by nickbradshaw on 4/28/16.
  */
-public class Reviews implements Parcelable {
+public class Review implements Parcelable {
 
     public String author;
     public String content;
 
-
-    private List<Reviews> reviews;
-
-    public Reviews(String author, String content) {
+    public Review(String author, String content) {
         this.author = author;
         this.content = content;
 
     }
-
 
     @Override
     public int describeContents() {
@@ -34,20 +28,20 @@ public class Reviews implements Parcelable {
         dest.writeString(this.content);
     }
 
-    protected Reviews(Parcel in) {
+    protected Review(Parcel in) {
         this.author = in.readString();
         this.content = in.readString();
     }
 
-    public static final Parcelable.Creator<Reviews> CREATOR = new Parcelable.Creator<Reviews>() {
+    public static final Parcelable.Creator<Review> CREATOR = new Parcelable.Creator<Review>() {
         @Override
-        public Reviews createFromParcel(Parcel source) {
-            return new Reviews(source);
+        public Review createFromParcel(Parcel source) {
+            return new Review(source);
         }
 
         @Override
-        public Reviews[] newArray(int size) {
-            return new Reviews[size];
+        public Review[] newArray(int size) {
+            return new Review[size];
         }
     };
 }
