@@ -1,7 +1,5 @@
 package com.zonkey.hotmovies;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,7 +72,6 @@ public class MovieDetailFragment extends Fragment {
 
 
         LinearLayoutManager reviewsLm = new LinearLayoutManager(getContext());
-//        LinearLayoutManager trailersLm = new LinearLayoutManager(getContext());
 
         LinearLayoutManager trailersLm
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -86,22 +83,6 @@ public class MovieDetailFragment extends Fragment {
 
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
-
-
-//        trailerGridview = (GridView) rootView.findViewById(R.id.trailers_gridView);
-
-
-        posterDetailImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (posterDetailImageView != null) {
-//                    Intent trailerIntent = new Intent(getActivity(), MovieTrailerActivity.class);
-                    Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
-                    trailerIntent.setData(Uri.parse(movie.getTrailerUrl()));
-                    startActivity(trailerIntent);
-                }
-            }
-        });
 
         return rootView;
     }

@@ -63,26 +63,10 @@ public class Movie implements Parcelable {
     }
 
 
-    public String getTrailerUrl() {
-        if (trailers.size() > 0) {
-            return trailers.get(0).getTrailerURL();
-        }
-        return null;
-    }
-
-
     public void setReviews(List<Reviews> reviews) {
         this.reviews = reviews;
     }
 
-    public Reviews getFirstReview() {
-        if (reviews.size() == 0) {
-            return null;
-        } else {
-            return reviews.get(0);
-        }
-
-    }
 
     @Override
     public int describeContents() {

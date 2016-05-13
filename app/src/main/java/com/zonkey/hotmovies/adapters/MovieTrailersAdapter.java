@@ -1,16 +1,16 @@
 package com.zonkey.hotmovies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zonkey.hotmovies.R;
-import com.zonkey.hotmovies.models.Movie;
 import com.zonkey.hotmovies.models.Trailer;
 
 import java.util.List;
@@ -22,8 +22,6 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
     private Context mContext;
     private List<Trailer> mTrailerList;
-    private Movie movie;
-    private Trailer trailer;
 
 
     public MovieTrailersAdapter(Context movieContext, List<Trailer> trailerList) {
@@ -40,13 +38,14 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        Picasso.with(mContext)
-                .load(mTrailerList.get(position).getTrailerImagerURL())
-                .resize(160, 120)
-                .into((viewHolder.trailerImageView));
+        viewHolder.display(mTrailerList.get(position));
+
+//        Picasso.with(mContext)
+//                .load(mTrailerList.get(position).getTrailerImagerURL())
+//                .resize(160, 120)
+//                .into((viewHolder.trailerImageView));
 
     }
-
 
 
     @Override
@@ -55,27 +54,32 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView trailerImageView;
+
+        public void display(final Trailer trailer) {
+            Picasso.with(mContext)
+                    .load(trailer.getTrailerImagerURL())
+                    .resize(160, 120)
+                    .into(trailerImageView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
+                    trailerIntent.setData(Uri.parse(trailer.getTrailerURL()));
+                    mContext.startActivity(trailerIntent);
+
+                }
+            });
+        }
+
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            itemView.setClickable(true);
-            itemView.setOnClickListener(this);
             trailerImageView = (ImageView) itemView.findViewById(R.id.trailers_imageView);
 
         }
-        
 
-
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(mContext, "Look at that bitch- a toast", Toast.LENGTH_SHORT).show();
-//                Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
-//                trailerIntent.setData(Uri.parse(trailer.getTrailerURL()));
-//                mContext.startActivity(trailerIntent);
-        }
     }
 
 }
