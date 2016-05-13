@@ -22,23 +22,33 @@ import com.zonkey.hotmovies.retrievers.MovieRetriever;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieDetailFragment extends Fragment implements MovieRetriever.MovieRetrieverCallback {
 
+    @BindView(R.id.detail_poster_imageView)
     ImageView posterDetailImageView;
+    @BindView(R.id.detail_backdrop_imageView)
     ImageView backdropDetailImageView;
+    @BindView(R.id.detail_movie_title)
     TextView movieTitleTextView;
+    @BindView(R.id.detail_movie_overview)
     TextView movieSummaryTextView;
+    @BindView(R.id.detail_user_rating_text)
     TextView movieRatingTextView;
+    @BindView(R.id.detail_vote_count_text)
     TextView movieTotalRatingsTextView;
+    @BindView(R.id.detail_release_date)
     TextView movieReleaseDateTextView;
+    @BindView(R.id.detail_click_for_trailer_textView)
     TextView movieClickForTrailerTextView;
-    TextView movieReviewAuthorTitleTextView;
-    TextView movieReviewAuthorTextView;
-    TextView movieReviewsTextView;
-    private Movie movie;
+    @BindView(R.id.reviews_recyclerView)
+    RecyclerView reviewRecyclerView;
+    @BindView(R.id.trailer_recycler_view)
+    RecyclerView trailerRecyclerView;
 
-    private RecyclerView reviewRecyclerView;
-    private RecyclerView trailerRecyclerView;
+    private Movie movie;
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -49,29 +59,11 @@ public class MovieDetailFragment extends Fragment implements MovieRetriever.Movi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        posterDetailImageView = (ImageView) rootView.findViewById(R.id.detail_poster_imageView);
-        movieClickForTrailerTextView = (TextView) rootView.findViewById(R.id.detail_click_for_trailer_textView);
-        backdropDetailImageView = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageView);
-        movieTitleTextView = (TextView) rootView.findViewById(R.id.detail_movie_title);
-        movieSummaryTextView = (TextView) rootView.findViewById(R.id.detail_movie_overview);
-        movieRatingTextView = (TextView) rootView.findViewById(R.id.detail_user_rating_text);
-        movieTotalRatingsTextView = (TextView) rootView.findViewById(R.id.detail_vote_count_text);
-        movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date);
-        movieReviewAuthorTitleTextView = (TextView) rootView.findViewById(R.id.detail_reviews_title_textView);
-        movieReviewAuthorTextView = (TextView) rootView.findViewById(R.id.detail_reviews_author_textView);
-        movieReviewsTextView = (TextView) rootView.findViewById(R.id.detail_reviews_textView);
-
-
-        //where we handle the reviews RecyclerView
-        reviewRecyclerView = (RecyclerView) rootView.findViewById(R.id.reviews_recyclerView);
-        trailerRecyclerView = (RecyclerView) rootView.findViewById(R.id.trailer_recycler_view);
-
+        ButterKnife.bind(this, rootView);
 
         LinearLayoutManager reviewsLm = new LinearLayoutManager(getContext());
-
         LinearLayoutManager trailersLm
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
 
         trailerRecyclerView.setHasFixedSize(true);
         trailerRecyclerView.setLayoutManager(trailersLm);
