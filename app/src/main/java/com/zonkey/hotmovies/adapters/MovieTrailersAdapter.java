@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zonkey.hotmovies.R;
+import com.zonkey.hotmovies.models.Movie;
 import com.zonkey.hotmovies.models.Trailer;
 
 import java.util.List;
@@ -20,6 +22,9 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
     private Context mContext;
     private List<Trailer> mTrailerList;
+    private Movie movie;
+    private Trailer trailer;
+
 
     public MovieTrailersAdapter(Context movieContext, List<Trailer> trailerList) {
         this.mContext = movieContext;
@@ -37,60 +42,41 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Picasso.with(mContext)
                 .load(mTrailerList.get(position).getTrailerImagerURL())
+                .resize(160, 120)
                 .into((viewHolder.trailerImageView));
+
     }
+
+
 
     @Override
     public int getItemCount() {
         return mTrailerList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView trailerImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            itemView.setClickable(true);
+            itemView.setOnClickListener(this);
             trailerImageView = (ImageView) itemView.findViewById(R.id.trailers_imageView);
 
         }
+        
+
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(mContext, "Look at that bitch- a toast", Toast.LENGTH_SHORT).show();
+//                Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
+//                trailerIntent.setData(Uri.parse(trailer.getTrailerURL()));
+//                mContext.startActivity(trailerIntent);
+        }
     }
+
 }
-//    @Override
-//    public int getCount() {
-//        return mTrailerList.size();
-//    }
-//
-//    @Override
-//    public long getItemId(int trailerPosition) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public Object getItem(int trailerPosition) {
-//        return mTrailerList.get(trailerPosition);
-//    }
-//
-//
-//    @Override
-//    public View getView(int movieTrailerPosition, View convertView, ViewGroup parent) {
-//        ImageView trailerImageView;
-//        if (convertView == null) {
-//            // if it's not recycled, initialize some attributes
-//            trailerImageView = new ImageView(mContext);
-//            trailerImageView.setAdjustViewBounds(true);
-//            trailerImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//
-//        } else {
-//            trailerImageView = (ImageView) convertView;
-//        }
-//        Trailer trailer = mTrailerList.get(movieTrailerPosition);
-//        Picasso.with(mContext)
-//                .load(trailer.getTrailerImagerURL())
-//                .into((trailerImageView));
-//
-//        return trailerImageView;
-
-
-
 

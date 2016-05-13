@@ -41,7 +41,7 @@ public class MovieDetailFragment extends Fragment {
     private RecyclerView reviewRecyclerView;
     private RecyclerView trailerRecyclerView;
 
-//    private GridView trailerGridview;
+    //    private GridView trailerGridview;
     private ImageView trailerImageView;
 
 
@@ -117,9 +117,6 @@ public class MovieDetailFragment extends Fragment {
         MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
         trailerRecyclerView.setAdapter(trailerAdapter);
 
-//        List<Trailer> trailers = movie.trailers != null ? movie.trailers : new ArrayList<Trailer>();
-//        MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
-//        trailerGridview.setAdapter(trailerAdapter);
 
     }
 

@@ -56,6 +56,8 @@ public class Movie implements Parcelable {
     }
 
 
+
+
     public void setTrailers(List<Trailer> trailers) {
         this.trailers = trailers;
     }
