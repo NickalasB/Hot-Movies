@@ -1,10 +1,12 @@
 package com.zonkey.hotmovies.retrievers;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.zonkey.hotmovies.models.Movie;
 import com.zonkey.hotmovies.networking.MovieService;
 import com.zonkey.hotmovies.networking.MovieServiceFactory;
+import com.zonkey.hotmovies.repositories.FavoritesRepository;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -29,6 +31,11 @@ public class MovieListRetriever implements Callback<List<Movie>> {
 
     public void getPopularMovies() {
         mMovieService.getPopularMovies().enqueue(this);
+    }
+
+    public void getFavoriteMovies(Context context) {
+        List<Movie> favoriteMovies = FavoritesRepository.getInstance().getFavoriteMovies(context);
+        notifyMoviesRetrieved(favoriteMovies);
     }
 
     @Override
