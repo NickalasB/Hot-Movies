@@ -1,18 +1,30 @@
 package com.zonkey.hotmovies;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.zonkey.hotmovies.adapters.MoviePosterAdapter;
 import com.zonkey.hotmovies.json.MovieTags;
+import com.zonkey.hotmovies.json.ReviewTags;
+import com.zonkey.hotmovies.json.TrailerTags;
 import com.zonkey.hotmovies.models.Movie;
+import com.zonkey.hotmovies.models.Reviews;
+import com.zonkey.hotmovies.models.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,31 +42,90 @@ import java.util.List;
 
 public class MoviePosterFragment extends Fragment {
 
+    public static final String MOVIE = "movie";
     //The correct urls for popular and highest rated
-    private final String POPULARITY_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
-    private final String HIGHEST_RATED_URL = "https://api.themoviedb.org/3/discover/movie?api_key=cc19772c03a449027eaa0cb6559f304a&sort_by=popularity.desc";
+    private final String POPULARITY_URL = "http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
+    private final String HIGHEST_RATED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
+
+
+    //Strings and ints for SharedPreferences
+    private static String SORT_ORDER = "sort_order";
+    private static final int SORT_ORDER_POPULAR = 0;
+    private static final int SORT_ORDER_HIGHEST_RATED = 1;
 
     private GridView moviePosterGridView;
+    private MoviePosterAdapter mMovieImageAdapter;
 
 
     public MoviePosterFragment() {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //ensures that a menu is happening in this fragment or activity
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        switch (id) {
+            case R.id.action_highest_rated:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else
+                    item.setChecked(true);
+                sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_HIGHEST_RATED).apply();
+
+                new FetchMoviesTask().execute(HIGHEST_RATED_URL);
+                return true;
+            case R.id.action_popular:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else
+                    item.setChecked(true);
+                sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_POPULAR).apply();
+
+                new FetchMoviesTask().execute(POPULARITY_URL);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //inflate the view from the specified fragment layout
         View rootView = inflater.inflate(R.layout.fragment_movie_poster_main, container, false);
-        //delare the GridView contained in the fragment_movie_poster_main layout
         moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
-
-
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getActivity(), "" + position,
-                        Toast.LENGTH_SHORT).show();
+                Intent detailIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+                detailIntent.putExtra(MOVIE, mMovieImageAdapter.getItem(position));
+                startActivity(detailIntent);
             }
         });
 
@@ -65,7 +136,28 @@ public class MoviePosterFragment extends Fragment {
      * this method updates the movies from the task created below
      */
     private void updateMovies() {
-        new FetchMoviesTask().execute(POPULARITY_URL);
+
+        final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+
+
+        FetchMoviesTask movieTask = new FetchMoviesTask();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int sortOrder = sharedPreferences.getInt(SORT_ORDER, SORT_ORDER_POPULAR);
+
+
+        switch (sortOrder) {
+            case SORT_ORDER_POPULAR:
+                //query popular URL here
+                movieTask.execute(POPULARITY_URL); //gets the sort option from shared preferences
+                break;
+            case SORT_ORDER_HIGHEST_RATED:
+                //query top rated URL here
+                movieTask.execute(HIGHEST_RATED_URL); //gets the sort option from shared preferences
+               break;
+        }
+
+        Log.v(LOG_TAG, "SAVED URL " + sortOrder);
+
     }
 
     //This ensures the movies refresh when this fragment is started
@@ -73,29 +165,21 @@ public class MoviePosterFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateMovies();
+
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
-
-        /**
-         * @param movieInfoJsonStr
-         * @return
-         * @throws JSONException
-         */
         private List<Movie> getMovieDataFromJson(String movieInfoJsonStr)
                 throws JSONException {
-
-
             //declaring the json object that we will call all the info we need from
             JSONObject jsonMovieInfo = new JSONObject(movieInfoJsonStr);
             //"results" is the child of the root json object ("results" is an array inside the Json object (as noted by [])
             JSONArray resultsArray = jsonMovieInfo.getJSONArray(MovieTags.RESULTS);
 
-            //we need to go through each object within the resultsArray and get each value that we need for things we need, poster, description, title
-
+            //we need to go through each object within the resultsArray and get each value that we need for things we need
             //iterate over the JsonArray creating a movie object for each Json object in the Array
             List<Movie> movieList = new ArrayList<>();
             for (int i = 0; i < resultsArray.length(); i++) {
@@ -104,14 +188,20 @@ public class MoviePosterFragment extends Fragment {
                 Movie movie = new Movie(
                         movieObject.getString(MovieTags.POSTER),
                         movieObject.getString(MovieTags.TITLE),
-                        movieObject.getString(MovieTags.OVERVIEW));
+                        movieObject.getString(MovieTags.OVERVIEW),
+                        movieObject.getString(MovieTags.ID),
+                        movieObject.getString(MovieTags.VOTE_COUNT),
+                        movieObject.getString(MovieTags.VOTE_AVERAGE),
+                        movieObject.getString(MovieTags.RELEASE_DATE),
+                        movieObject.getString(MovieTags.BACKDROP_PATH));
 
-                //this adds the big ol object we just created
+                //this adds it all up into the big ol object we just created
                 movieList.add(movie);
             }
+            Log.v(LOG_TAG, "movie Json results:" + movieList);
+
+
             return movieList;
-
-
         }
 
 
@@ -131,17 +221,16 @@ public class MoviePosterFragment extends Fragment {
             String posterJsonStr = null;
 
             try {
-                // Construct the URL for the movieDb query
-                // Possible parameters are available at OWM's forecast API page, at
-                // http://docs.themoviedb.apiary.io/#
+//
+//                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+//                final String API_KEY_PARAM = "api_key";
+//
+//                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+//                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
+//                        .build();
 
-                //This is where the link with the info we seek is actually created
-
-
-                //this is where the URL is created
                 URL url = new URL(params[0]);
-                //this s for logging it
-                Log.v(LOG_TAG, "Built URI " + params[0]);
+
 
                 // Create the request to MovieDB, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -177,7 +266,7 @@ public class MoviePosterFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the movie data, there's no point in attempting
                 // to parse it.
                 return null;
             } finally {
@@ -208,12 +297,267 @@ public class MoviePosterFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             if (moviePosterGridView != null && movies != null) {
-                moviePosterGridView.setAdapter(new MovieImageAdapter(getContext(), movies));
-            }else{
-                Toast.makeText(getActivity(), "you ain't got no movies", Toast.LENGTH_SHORT).show();
+                mMovieImageAdapter = new MoviePosterAdapter(getContext(), movies);
+                moviePosterGridView.setAdapter(mMovieImageAdapter);
+                for (Movie movie : movies){
+                    new FetchTrailerTask().execute(movie);
+                    new FetchReviewsTask().execute(movie);
+                }
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.poster_fragment_movies_error), Toast.LENGTH_SHORT).show();
             }
 
         }
     }
+
+    public class FetchTrailerTask extends AsyncTask<Movie, Void, List<Trailer>> {
+
+        private final String LOG_TAG = FetchTrailerTask.class.getSimpleName();
+        private Movie mMovie;
+
+        private List<Trailer> getTrailerDataFromJson(String trailerInfoJsonStr)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            final String TRAILER_KEY= "key";
+
+            JSONObject jsonTrailerInfo = new JSONObject(trailerInfoJsonStr);
+            JSONArray trailerArray = jsonTrailerInfo.getJSONArray(TrailerTags.RESULTS);
+
+            List<Trailer> trailerList = new ArrayList<>();
+            for (int i = 0; i < trailerArray.length(); i++) {
+                // for every object in this array we need to create a movie object
+                JSONObject trailerObject = trailerArray.getJSONObject(i);
+                Trailer trailer = new Trailer(
+                        trailerObject.getString(TRAILER_KEY));
+                //this adds it all up into the big ol object we just created
+                trailerList.add(trailer);
+            }
+
+            return trailerList;
+
+
+        }
+
+        @Override
+        protected List<Trailer> doInBackground(Movie... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            mMovie = params[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String trailerJsonStr = null;
+
+            try {
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+                //"http://api.themoviedb.org/3/movie/[movieID]/videos";
+                final String VIDEOS_PARAM = "videos";
+                final String API_KEY_PARAM = "api_key";
+
+
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(mMovie.id)
+                        .appendPath(VIDEOS_PARAM)
+                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
+                        .build();
+
+
+                URL url = new URL(builtUri.toString());
+                Log.v(LOG_TAG, "Built Trailer URL:" + builtUri);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                trailerJsonStr = buffer.toString();
+
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getTrailerDataFromJson(trailerJsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Trailer> trailers) {
+            mMovie.setTrailers(trailers);
+
+
+        }
+
+    }
+
+
+    public class FetchReviewsTask extends AsyncTask<Movie, Void, List<Reviews>> {
+
+        private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
+        private Movie mMovie;
+
+        private List<Reviews> getReviewsDataFromJson(String reviewsInfoJsonStr)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            final String REVIEWS_AUTHOR= "author";
+            final String REVIEWS_CONTENT= "content";
+
+
+            JSONObject jsonReviewsInfo = new JSONObject(reviewsInfoJsonStr);
+            JSONArray reviewsArray = jsonReviewsInfo.getJSONArray(ReviewTags.RESULTS);
+
+            List<Reviews> reviewsList = new ArrayList<>();
+            for (int i = 0; i < reviewsArray.length(); i++) {
+                // for every object in this array we need to create a movie object
+                JSONObject reviewsObject = reviewsArray.getJSONObject(i);
+                Reviews reviews = new Reviews(
+                        reviewsObject.getString(REVIEWS_AUTHOR),
+                        reviewsObject.getString(REVIEWS_CONTENT));
+                //this adds it all up into the big ol object we just created
+                reviewsList.add(reviews);
+            }
+
+            return reviewsList;
+
+
+        }
+
+        @Override
+        protected List<Reviews> doInBackground(Movie... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            mMovie = params[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String reviewsJsonStr = null;
+
+            try {
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+                //"http://api.themoviedb.org/3/movie/[movieID]/videos";
+                final String REVIEWS_PARAM = "reviews";
+                final String API_KEY_PARAM = "api_key";
+
+
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(mMovie.id)
+                        .appendPath(REVIEWS_PARAM)
+                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
+                        .build();
+
+
+                URL url = new URL(builtUri.toString());
+                Log.v(LOG_TAG, "Built Reviews URL:" + builtUri);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                reviewsJsonStr = buffer.toString();
+
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getReviewsDataFromJson(reviewsJsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Reviews> reviews) {
+
+            mMovie.setReviews(reviews);
+
+        }
+
+    }
+
+
 }
 

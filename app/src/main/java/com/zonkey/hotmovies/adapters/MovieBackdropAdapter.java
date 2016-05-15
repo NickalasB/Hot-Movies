@@ -1,4 +1,4 @@
-package com.zonkey.hotmovies;
+package com.zonkey.hotmovies.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -12,53 +12,53 @@ import com.zonkey.hotmovies.models.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class MovieImageAdapter extends BaseAdapter {
-
+/**
+ * Created by nickbradshaw on 5/12/16.
+ */
+public class MovieBackdropAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> mMovieList;
 
-
-    public MovieImageAdapter(Context movieContext, List<Movie> movieList) {
+    public MovieBackdropAdapter(Context movieContext, List<Movie> movieList) {
         mContext = movieContext;
         mMovieList = new ArrayList<>(movieList);
     }
 
+    @Override
     public int getCount() {
         return mMovieList.size();
     }
 
+    @Override
     public Object getItem(int moviePosterPosition) {
-        return null;
+        return mMovieList.get(moviePosterPosition);
     }
 
+    @Override
     public long getItemId(int moviePosterPosition) {
         return 0;
     }
 
-
-    // create a new ImageView for each item referenced by the Adapter
+    @Override
     public View getView(int moviePosterPosition, View convertView, ViewGroup parent) {
-        ImageView posterImageView;
+        ImageView backdropImageView;
+
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            posterImageView = new ImageView(mContext);
-            posterImageView.setAdjustViewBounds(true);
-//            posterImageView.setLayoutParams(new GridView.LayoutParams(170, 170));
-            posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            posterImageView.setPadding(8, 8, 8, 8);
+
+            backdropImageView = new ImageView(mContext);
+            backdropImageView.setAdjustViewBounds(true);
+            backdropImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
-            posterImageView = (ImageView) convertView;
-
+            backdropImageView = (ImageView) convertView;
         }
-        Movie movie = mMovieList.get(moviePosterPosition);
-        Picasso.with(mContext).setLoggingEnabled(true);
-        Picasso.with(mContext).load(movie.getPosterURL()).into(posterImageView);
 
-        return posterImageView;
+        Movie movie = mMovieList.get(moviePosterPosition);
+        Picasso.with(mContext).load(movie.getBackdropURL()).into(backdropImageView);
+
+        return backdropImageView;
     }
 
 
 }
-
