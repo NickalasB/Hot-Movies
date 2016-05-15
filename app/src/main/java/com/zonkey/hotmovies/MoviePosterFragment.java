@@ -18,7 +18,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.zonkey.hotmovies.adapters.MovieImageAdapter;
+import com.zonkey.hotmovies.adapters.MoviePosterAdapter;
 import com.zonkey.hotmovies.json.MovieTags;
 import com.zonkey.hotmovies.json.ReviewTags;
 import com.zonkey.hotmovies.json.TrailerTags;
@@ -54,7 +54,7 @@ public class MoviePosterFragment extends Fragment {
     private static final int SORT_ORDER_HIGHEST_RATED = 1;
 
     private GridView moviePosterGridView;
-    private MovieImageAdapter mMovieImageAdapter;
+    private MoviePosterAdapter mMovieImageAdapter;
 
 
     public MoviePosterFragment() {
@@ -297,7 +297,7 @@ public class MoviePosterFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             if (moviePosterGridView != null && movies != null) {
-                mMovieImageAdapter = new MovieImageAdapter(getContext(), movies);
+                mMovieImageAdapter = new MoviePosterAdapter(getContext(), movies);
                 moviePosterGridView.setAdapter(mMovieImageAdapter);
                 for (Movie movie : movies){
                     new FetchTrailerTask().execute(movie);

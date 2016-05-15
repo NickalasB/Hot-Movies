@@ -15,7 +15,7 @@ public class MovieTags {
     public static final String VOTE_COUNT = "vote_count";
     public static final String VOTE_AVERAGE = "vote_average";
     public static final String RELEASE_DATE = "release_date";
-    public static final String BACKDROP_PATH = "release_date";
+    public static final String BACKDROP_PATH = "backdrop_path";
 
 
 }

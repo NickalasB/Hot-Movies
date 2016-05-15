@@ -13,7 +13,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
         android:scrollbars="horizontal"
-        app:cardBackgroundColor="@android:color/holo_red_dark"
+        app:cardBackgroundColor="@android:color/holo_purple"
         app:cardCornerRadius="4dp"
         android:layout_gravity="center">
 

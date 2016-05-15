@@ -25,9 +25,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.zonkey.hotmovies.MainActivity" />
         </activity>
-        <activity
-            android:name=".MovieTrailerActivity"
-            android:screenOrientation="landscape">
+
+        <activity android:name=".MovieReviewActivity"
+            android:parentActivityName=".MovieDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.zonkey.hotmovies.MovieDetailsActivity"/>
+
         </activity>
     </application>
 

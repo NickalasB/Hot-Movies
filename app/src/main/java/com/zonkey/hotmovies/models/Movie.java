@@ -50,9 +50,9 @@ public class Movie implements Parcelable {
     }
 
 
-    //this constructs the base URL plus the "poster_path" defined in the API- it is not yet implemented
+    //this constructs the base URL plus the "poster_path" defined in the API-
     public String getBackdropURL() {
-        return String.format("http://image.tmdb.org/t/p/w185%s", backdrop_path);
+        return String.format("http://image.tmdb.org/t/p/w500%s", backdrop_path);
     }
 
 

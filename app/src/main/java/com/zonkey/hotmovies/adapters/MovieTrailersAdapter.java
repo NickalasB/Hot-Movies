@@ -33,17 +33,13 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     @Override
     public MovieTrailersAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_trailers_card, viewGroup, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.display(mTrailerList.get(position));
-
-//        Picasso.with(mContext)
-//                .load(mTrailerList.get(position).getTrailerImagerURL())
-//                .resize(160, 120)
-//                .into((viewHolder.trailerImageView));
 
     }
 
