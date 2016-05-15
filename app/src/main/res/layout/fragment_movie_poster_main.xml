@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.zonkey.hotmovies.MoviePosterFragment">
 
-
     <GridView
         android:id="@+id/movie_gridview"
         android:layout_width="match_parent"
@@ -13,6 +12,7 @@
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:columnWidth="85dp">
+
 
     </GridView>
 
