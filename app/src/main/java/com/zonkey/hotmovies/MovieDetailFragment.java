@@ -172,11 +172,12 @@ public class MovieDetailFragment extends Fragment {
             movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
 
+
+            initializeReviewAdapter();
+            initializeTrailerAdapter();
             if (movie.reviews.size() == 0) {
                 movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
             }
-            initializeReviewAdapter();
-            initializeTrailerAdapter();
         }
     }
 

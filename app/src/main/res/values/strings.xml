@@ -4,6 +4,8 @@
     <!--Menu strings-->
     <string name="action_popular">Most Popular</string>
     <string name="action_ratings">Highest Rated</string>
+    <string name="action_favorite">Favorites</string>
+
 
     <!--MovieDetailActivity Strings-->
     <string name="details_title">Details</string>
