@@ -12,6 +12,10 @@
     <string name="details_scroll_for_trailer">Scroll thumbnails for trailers</string>
     <string name="details_reviews_title">Review</string>
     <string name="details_no_reviews_title">Reviews: No reviews yet!</string>
+    <string name="details_no_trailers_textview">No trailers for this movie yet!</string>
+
+
+
 
 
 
