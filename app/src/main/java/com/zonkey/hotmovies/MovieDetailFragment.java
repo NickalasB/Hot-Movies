@@ -156,7 +156,6 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void displayMovie() {
-
         if (movie != null) {
             Picasso.with(getContext())
                     .load(movie.getPosterURL())
@@ -173,16 +172,17 @@ public class MovieDetailFragment extends Fragment {
             movieSummaryTextView.setText(movie.overview);
 
             //these have to be initialized before checking for review size
+            // otherwise the reviews.size always == 0
             initializeReviewAdapter();
             initializeTrailerAdapter();
-
 
             if (movie.reviews.size() == 0) {
                 movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
             }
-            if (movie.trailers.size() == 0){
+            if (movie.trailers.size() == 0) {
                 movieScrollForTrailerTextView.setText(R.string.details_no_trailers_textview);
             }
+
         }
 
 
@@ -198,7 +198,7 @@ public class MovieDetailFragment extends Fragment {
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
-            final String TRAILER_KEY= "key";
+            final String TRAILER_KEY = "key";
 
             JSONObject jsonTrailerInfo = new JSONObject(trailerInfoJsonStr);
             JSONArray trailerArray = jsonTrailerInfo.getJSONArray(TrailerTags.RESULTS);
@@ -322,8 +322,8 @@ public class MovieDetailFragment extends Fragment {
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
-            final String REVIEWS_AUTHOR= "author";
-            final String REVIEWS_CONTENT= "content";
+            final String REVIEWS_AUTHOR = "author";
+            final String REVIEWS_CONTENT = "content";
 
 
             JSONObject jsonReviewsInfo = new JSONObject(reviewsInfoJsonStr);
