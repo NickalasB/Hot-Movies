@@ -49,7 +49,7 @@ public class MovieBackdropAdapter extends BaseAdapter {
 
             backdropImageView = new ImageView(mContext);
             backdropImageView.setAdjustViewBounds(true);
-            backdropImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            backdropImageView.setScaleType(ImageView.ScaleType.CENTER);
         } else {
             backdropImageView = (ImageView) convertView;
         }

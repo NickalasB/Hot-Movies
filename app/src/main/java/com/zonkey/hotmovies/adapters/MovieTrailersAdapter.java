@@ -56,7 +56,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         public void display(final Trailer trailer) {
             Picasso.with(mContext)
                     .load(trailer.getTrailerImagerURL())
-                    .resize(160, 120)
+//                    .resize(160, 120)
                     .into(trailerImageView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,6 +67,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
                 }
             });
+
         }
 
 

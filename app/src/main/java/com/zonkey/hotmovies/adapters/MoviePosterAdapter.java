@@ -56,7 +56,9 @@ public class MoviePosterAdapter extends BaseAdapter {
 
 
         Movie movie = mMovieList.get(moviePosterPosition);
-        Picasso.with(mContext).load(movie.getPosterURL()).into(posterImageView);
+        Picasso.with(mContext)
+                .load(movie.getPosterURL())
+                .into(posterImageView);
 
         return posterImageView;
     }

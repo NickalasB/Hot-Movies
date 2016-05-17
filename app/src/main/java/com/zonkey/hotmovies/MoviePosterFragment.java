@@ -66,6 +66,8 @@ public class MoviePosterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this fragment or activity
         setHasOptionsMenu(true);
+        getActivity().setTitle(R.string.app_name);
+
     }
 
     @Override
@@ -95,6 +97,7 @@ public class MoviePosterFragment extends Fragment {
                 else
                     item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_HIGHEST_RATED).apply();
+                getActivity().setTitle("Highest Rated");
                 updateMovies();
                 return true;
             case R.id.action_popular:
@@ -103,6 +106,7 @@ public class MoviePosterFragment extends Fragment {
                 else
                     item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_POPULAR).apply();
+                getActivity().setTitle("Most Popular");
                 updateMovies();
                 return true;
             case R.id.action_favorite:
@@ -111,6 +115,7 @@ public class MoviePosterFragment extends Fragment {
                 else
                 item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_FAVORITE).apply();
+                getActivity().setTitle("Favorites");
                 updateMovies();
             default:
                 return super.onOptionsItemSelected(item);
@@ -132,6 +137,7 @@ public class MoviePosterFragment extends Fragment {
                 startActivity(detailIntent);
             }
         });
+
 
         return rootView;
     }
@@ -439,7 +445,7 @@ public class MoviePosterFragment extends Fragment {
                 mMovieImageAdapter = new MoviePosterAdapter(getContext(), movies);
                 moviePosterGridView.setAdapter(mMovieImageAdapter);
             } else {
-                Toast.makeText(getActivity(), getString(R.string.poster_fragment_movies_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.favorites_fragment_movies_error), Toast.LENGTH_SHORT).show();
             }
 
         }
