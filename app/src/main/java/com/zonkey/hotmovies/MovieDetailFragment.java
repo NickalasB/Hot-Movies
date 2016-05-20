@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,8 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
         posterDetailImageView = (ImageView) rootView.findViewById(R.id.detail_poster_imageView);
         movieScrollForTrailerTextView = (TextView) rootView.findViewById(R.id.detail_scroll_for_trailer_textView);
@@ -120,6 +123,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
+
     private void setUpFavoriteButton(final Movie movie) {
         favoriteButton.setChecked(FavoritesManager.getInstance().isFavorite(movie.id, getContext()));
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -146,7 +150,6 @@ public class MovieDetailFragment extends Fragment {
         List<Reviews> reviews = movie.reviews != null ? movie.reviews : new ArrayList<Reviews>();
         MovieReviewsAdapter adapter = new MovieReviewsAdapter(getActivity(), reviews);
         reviewRecyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -164,6 +167,60 @@ public class MovieDetailFragment extends Fragment {
                     .load(movie.getBackdropURL())
                     .into(backdropDetailImageView);
 
+            switch (getResources().getDisplayMetrics().densityDpi) {
+                case DisplayMetrics.DENSITY_LOW:
+                    //this one doesn't resize because the default size(w500/h281)
+                    //works fine
+                    Picasso.with(getContext())
+                            .load(movie.getPosterURL())
+                            .into(posterDetailImageView);
+                    //this one doesn't resize because the default size(w185/h278)
+                    //works fine
+                    Picasso.with(getContext())
+                            .load(movie.getBackdropURL())
+                            .into(backdropDetailImageView);
+                    break;
+                case DisplayMetrics.DENSITY_MEDIUM:
+                    //this one doesn't resize because the default size(w500/h281)
+                    //works fine
+                    Picasso.with(getContext())
+                            .load(movie.getPosterURL())
+                            .into(posterDetailImageView);
+                    Picasso.with(getContext())
+                            .load(movie.getBackdropURL())
+                            .into(backdropDetailImageView);
+                    break;
+                case DisplayMetrics.DENSITY_HIGH:
+                    //this one doesn't resize because the default size(w500/h281)
+                    //works fine
+                    Picasso.with(getContext())
+                            .load(movie.getPosterURL())
+                            .into(posterDetailImageView);
+                    Picasso.with(getContext())
+                            .load(movie.getBackdropURL())
+                            .into(backdropDetailImageView);
+                    break;
+                case DisplayMetrics.DENSITY_XHIGH:
+                    Picasso.with(getContext())
+                            .load(movie.getPosterURL())
+                            .into(posterDetailImageView);
+                    Picasso.with(getContext())
+                            .load(movie.getBackdropURL())
+                            .resize(1000, 563)
+                            .into(backdropDetailImageView);
+                    break;
+                case DisplayMetrics.DENSITY_XXHIGH:
+                    Picasso.with(getContext())
+                            .load(movie.getPosterURL())
+                            .resize(370,556)
+                            .into(posterDetailImageView);
+                    Picasso.with(getContext())
+                            .load(movie.getBackdropURL())
+                            .resize(1500, 845)
+                            .into(backdropDetailImageView);
+                    break;
+            }
+
             movieScrollForTrailerTextView.setText(R.string.details_scroll_for_trailer);
             movieTitleTextView.setText(movie.title);
             movieReleaseDateTextView.setText("Release date: " + movie.release_date);
@@ -173,19 +230,12 @@ public class MovieDetailFragment extends Fragment {
 
             //these have to be initialized before checking for review size
             // otherwise the reviews.size always == 0
-            initializeReviewAdapter();
-            initializeTrailerAdapter();
 
-            if (movie.reviews.size() == 0) {
-                movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
-            }
-            if (movie.trailers.size() == 0) {
-                movieScrollForTrailerTextView.setText(R.string.details_no_trailers_textview);
-            }
 
         }
 
-
+        initializeReviewAdapter();
+        initializeTrailerAdapter();
     }
 
 
@@ -354,6 +404,7 @@ public class MovieDetailFragment extends Fragment {
 
             mMovie = params[0];
 
+
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -433,6 +484,12 @@ public class MovieDetailFragment extends Fragment {
         protected void onPostExecute(List<Reviews> reviews) {
 
             mMovie.setReviews(reviews);
+            if (movie.reviews.size() == 0) {
+                movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
+            }
+            if (movie.trailers.size() == 0) {
+                movieScrollForTrailerTextView.setText(R.string.details_no_trailers_textview);
+            }
             displayMovie();
 
         }
