@@ -160,12 +160,12 @@ public class MovieDetailFragment extends Fragment {
 
     private void displayMovie() {
         if (movie != null) {
-//            Picasso.with(getContext())
-//                    .load(movie.getPosterURL())
-//                    .into(posterDetailImageView);
-//            Picasso.with(getContext())
-//                    .load(movie.getBackdropURL())
-//                    .into(backdropDetailImageView);
+            Picasso.with(getContext())
+                    .load(movie.getPosterURL())
+                    .into(posterDetailImageView);
+            Picasso.with(getContext())
+                    .load(movie.getBackdropURL())
+                    .into(backdropDetailImageView);
 
             switch (getResources().getDisplayMetrics().densityDpi) {
                 case DisplayMetrics.DENSITY_LOW:
