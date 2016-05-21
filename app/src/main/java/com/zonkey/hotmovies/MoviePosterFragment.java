@@ -115,7 +115,6 @@ public class MoviePosterFragment extends Fragment {
                 else
                 item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_FAVORITE).apply();
-                getActivity().setTitle("Favorites");
                 updateMovies();
             default:
                 return super.onOptionsItemSelected(item);
@@ -129,6 +128,7 @@ public class MoviePosterFragment extends Fragment {
         //inflate the view from the specified fragment layout
         View rootView = inflater.inflate(R.layout.fragment_movie_poster_main, container, false);
         moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
+        moviePosterGridView.setNumColumns(3);
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -444,6 +444,7 @@ public class MoviePosterFragment extends Fragment {
             if (moviePosterGridView != null && movies != null) {
                 mMovieImageAdapter = new MoviePosterAdapter(getContext(), movies);
                 moviePosterGridView.setAdapter(mMovieImageAdapter);
+                getActivity().setTitle("Favorites");
             } else {
                 Toast.makeText(getActivity(), getString(R.string.favorites_fragment_movies_error), Toast.LENGTH_SHORT).show();
             }
