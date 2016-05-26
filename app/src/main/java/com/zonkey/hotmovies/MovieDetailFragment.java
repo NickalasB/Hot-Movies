@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,7 +122,6 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
-
     private void setUpFavoriteButton(final Movie movie) {
         favoriteButton.setChecked(FavoritesManager.getInstance().isFavorite(movie.id, getContext()));
         favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -155,8 +153,14 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        displayMovie();
+        // TODO: 5/25/16  the app crashes on tablet when displayMovie(): is called as it's null
+        if (movie != null){
+            displayMovie();
+        }
     }
+
+
+
 
     private void displayMovie() {
         if (movie != null) {
@@ -166,74 +170,13 @@ public class MovieDetailFragment extends Fragment {
             Picasso.with(getContext())
                     .load(movie.getBackdropURL())
                     .into(backdropDetailImageView);
-
-            switch (getResources().getDisplayMetrics().densityDpi) {
-                case DisplayMetrics.DENSITY_LOW:
-                    //this one doesn't resize because the default size(w500/h281)
-                    //works fine
-                    Picasso.with(getContext())
-                            .load(movie.getPosterURL())
-                            .into(posterDetailImageView);
-                    //this one doesn't resize because the default size(w185/h278)
-                    //works fine
-                    Picasso.with(getContext())
-                            .load(movie.getBackdropURL())
-                            .into(backdropDetailImageView);
-                    break;
-                case DisplayMetrics.DENSITY_MEDIUM:
-                    //this one doesn't resize because the default size(w500/h281)
-                    //works fine
-                    Picasso.with(getContext())
-                            .load(movie.getPosterURL())
-                            .into(posterDetailImageView);
-                    Picasso.with(getContext())
-                            .load(movie.getBackdropURL())
-                            .into(backdropDetailImageView);
-                    break;
-                case DisplayMetrics.DENSITY_HIGH:
-                    //this one doesn't resize because the default size(w500/h281)
-                    //works fine
-                    Picasso.with(getContext())
-                            .load(movie.getPosterURL())
-                            .into(posterDetailImageView);
-                    Picasso.with(getContext())
-                            .load(movie.getBackdropURL())
-                            .into(backdropDetailImageView);
-                    break;
-                case DisplayMetrics.DENSITY_XHIGH:
-                    Picasso.with(getContext())
-                            .load(movie.getPosterURL())
-                            .into(posterDetailImageView);
-                    Picasso.with(getContext())
-                            .load(movie.getBackdropURL())
-                            .resize(1000, 563)
-                            .into(backdropDetailImageView);
-                    break;
-                case DisplayMetrics.DENSITY_XXHIGH:
-                    Picasso.with(getContext())
-                            .load(movie.getPosterURL())
-                            .resize(370,556)
-                            .into(posterDetailImageView);
-                    Picasso.with(getContext())
-                            .load(movie.getBackdropURL())
-                            .resize(1500, 845)
-                            .into(backdropDetailImageView);
-                    break;
-            }
-
             movieScrollForTrailerTextView.setText(R.string.details_scroll_for_trailer);
             movieTitleTextView.setText(movie.title);
             movieReleaseDateTextView.setText("Release date: " + movie.release_date);
             movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
             movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
-
-            //these have to be initialized before checking for review size
-            // otherwise the reviews.size always == 0
-
-
         }
-
         initializeReviewAdapter();
         initializeTrailerAdapter();
     }

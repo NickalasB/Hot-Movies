@@ -25,6 +25,7 @@ public class MovieBackdropAdapter extends BaseAdapter {
         mMovieList = new ArrayList<>(movieList);
     }
 
+
     @Override
     public int getCount() {
         return mMovieList.size();
