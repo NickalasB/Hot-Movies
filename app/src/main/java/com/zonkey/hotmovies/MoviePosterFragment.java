@@ -1,6 +1,6 @@
 package com.zonkey.hotmovies;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,7 +40,7 @@ import java.util.Set;
 
 public class MoviePosterFragment extends Fragment {
 
-    public static final String MOVIE = "movie";
+
     //The correct urls for popular and highest rated
     private final String POPULARITY_URL = "http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
     private final String HIGHEST_RATED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
@@ -54,7 +54,13 @@ public class MoviePosterFragment extends Fragment {
 
     private GridView moviePosterGridView;
     private MoviePosterAdapter mMovieImageAdapter;
+    private OnMovieClickedListener mOnMovieClickedListener;
 
+
+    interface OnMovieClickedListener{
+        void onMovieSelected(Movie movie);
+
+    }
 
     public MoviePosterFragment() {
         // Required empty public constructor
@@ -68,6 +74,22 @@ public class MoviePosterFragment extends Fragment {
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.app_name);
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnMovieClickedListener){
+            mOnMovieClickedListener = (OnMovieClickedListener) activity;
+        }else{
+            throw new IllegalArgumentException("Activity must implement OnMovieClickedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mOnMovieClickedListener = null;
+        super.onDetach();
     }
 
     @Override
@@ -132,10 +154,9 @@ public class MoviePosterFragment extends Fragment {
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent detailIntent = new Intent(getActivity(), MovieDetailsActivity.class);
-                detailIntent.putExtra(MOVIE, mMovieImageAdapter.getItem(position));
-                startActivity(detailIntent);
-
+                if (mOnMovieClickedListener != null){
+                    mOnMovieClickedListener.onMovieSelected(mMovieImageAdapter.getItem(position));
+                }
             }
         });
 

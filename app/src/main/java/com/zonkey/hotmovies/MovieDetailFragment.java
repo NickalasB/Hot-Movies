@@ -85,9 +85,6 @@ public class MovieDetailFragment extends Fragment {
         movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date);
         favoriteButton = (ToggleButton) rootView.findViewById(R.id.detail_favorite_button);
         movieReviewAuthorTitleTextView = (TextView) rootView.findViewById(R.id.detail_reviews_title_textView);
-//        movieReviewAuthorTextView = (TextView) rootView.findViewById(R.id.detail_reviews_author_textView);
-//        movieReviewsTextView = (TextView) rootView.findViewById(R.id.detail_reviews_textView);
-
         movieReviewTitleTextView = (TextView) rootView.findViewById(R.id.details_review_title);
         trailerImageView = (ImageView) rootView.findViewById(R.id.trailers_imageView);
 
@@ -110,15 +107,26 @@ public class MovieDetailFragment extends Fragment {
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
 
+
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(MainActivity.MOVIE)){
+            movie = bundle.getParcelable(MainActivity.MOVIE);
+            if (movie != null){
+                setUpFavoriteButtonAndLoadMovie(movie);
+            }
+        }
         return rootView;
     }
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+        setUpFavoriteButtonAndLoadMovie(movie);
+    }
+
+    private void setUpFavoriteButtonAndLoadMovie(Movie movie) {
         setUpFavoriteButton(movie);
         new FetchTrailerTask().execute(movie);
         new FetchReviewsTask().execute(movie);
-
     }
 
 
