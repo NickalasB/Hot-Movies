@@ -107,7 +107,6 @@ public class MovieDetailFragment extends Fragment {
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
 
-        displayMovie();
 
 
         Bundle bundle = getArguments();
@@ -163,13 +162,10 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // TODO: 5/25/16  the app crashes on tablet when displayMovie(): is called as it's null
         if (movie != null){
             displayMovie();
         }
     }
-
-
 
 
     private void displayMovie() {
@@ -190,6 +186,8 @@ public class MovieDetailFragment extends Fragment {
         initializeReviewAdapter();
         initializeTrailerAdapter();
     }
+
+
 
 
     public class FetchTrailerTask extends AsyncTask<Movie, Void, List<Trailer>> {

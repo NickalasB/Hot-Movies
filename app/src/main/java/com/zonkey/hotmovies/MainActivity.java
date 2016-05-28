@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterFragme
             Bundle bundle = new Bundle();
             bundle.putParcelable(MOVIE, movie);
             fragment.setArguments(bundle);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_details_container, fragment, MOVIEPOSTERFRAGMENT_TAG)
                     .commit();
