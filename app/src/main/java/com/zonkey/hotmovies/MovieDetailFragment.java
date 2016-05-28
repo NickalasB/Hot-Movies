@@ -107,6 +107,8 @@ public class MovieDetailFragment extends Fragment {
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
 
+        displayMovie();
+
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(MainActivity.MOVIE)){

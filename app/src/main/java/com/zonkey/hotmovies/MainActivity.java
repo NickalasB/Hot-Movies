@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterFragme
     public void onMovieSelected(Movie movie) {
         if (mTwoPane){
             MovieDetailFragment fragment = new MovieDetailFragment();
-
             Bundle bundle = new Bundle();
             bundle.putParcelable(MOVIE, movie);
             fragment.setArguments(bundle);
