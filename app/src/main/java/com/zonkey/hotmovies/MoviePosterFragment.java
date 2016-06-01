@@ -40,6 +40,12 @@ import java.util.Set;
 
 public class MoviePosterFragment extends Fragment {
 
+    int mPosition = GridView.INVALID_POSITION;
+    String POSITION_KEY = "selected_position";
+
+    String SCROLL_POSITION_KEY = "selected_scroll_position";
+    String SCROLL_OFFSET_KEY = "selected_scroll_offset";
+
 
     //The correct urls for popular and highest rated
     private final String POPULARITY_URL = "http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
@@ -57,7 +63,7 @@ public class MoviePosterFragment extends Fragment {
     private OnMovieClickedListener mOnMovieClickedListener;
 
 
-    interface OnMovieClickedListener{
+    interface OnMovieClickedListener {
         void onMovieSelected(Movie movie);
 
     }
@@ -79,9 +85,9 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnMovieClickedListener){
+        if (activity instanceof OnMovieClickedListener) {
             mOnMovieClickedListener = (OnMovieClickedListener) activity;
-        }else{
+        } else {
             throw new IllegalArgumentException("Activity must implement OnMovieClickedListener");
         }
     }
@@ -95,6 +101,20 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+        if (mPosition != GridView.INVALID_POSITION) {
+            savedInstanceState.putInt(POSITION_KEY, mPosition);
+        }
+        savedInstanceState.putInt(SCROLL_POSITION_KEY, moviePosterGridView.getFirstVisiblePosition());
+        savedInstanceState.putInt(SCROLL_OFFSET_KEY, getScrollOffset());
+        savedInstanceState.putParcelableArrayList("Movies", mMovieImageAdapter.getMovieList());
+    }
+
+    private int getScrollOffset() {
+        View view = moviePosterGridView.getChildAt(0);
+        if (view != null) {
+            return view.getTop();
+        }
+        return 0;
     }
 
     @Override
@@ -135,7 +155,7 @@ public class MoviePosterFragment extends Fragment {
                 if (item.isChecked())
                     item.setChecked(false);
                 else
-                item.setChecked(true);
+                    item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_FAVORITE).apply();
                 updateMovies();
             default:
@@ -151,14 +171,28 @@ public class MoviePosterFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_movie_poster_main, container, false);
         moviePosterGridView = (GridView) rootView.findViewById(R.id.movie_gridview);
         moviePosterGridView.setNumColumns(3);
+
         moviePosterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                if (mOnMovieClickedListener != null){
+                if (mOnMovieClickedListener != null) {
                     mOnMovieClickedListener.onMovieSelected(mMovieImageAdapter.getItem(position));
                 }
+                mPosition = position;
             }
         });
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY, GridView.INVALID_POSITION);
+
+            List<Movie> movies = savedInstanceState.getParcelableArrayList("Movies");
+            if (movies != null) {
+                mMovieImageAdapter = new MoviePosterAdapter(getContext(), movies);
+                moviePosterGridView.setAdapter(mMovieImageAdapter);
+                int mScrollPosition = savedInstanceState.getInt(SCROLL_POSITION_KEY, 0);
+                int mScrollOffset = savedInstanceState.getInt(SCROLL_OFFSET_KEY, 0);
+                moviePosterGridView.smoothScrollToPositionFromTop(mScrollPosition, mScrollOffset);
+            }
+        }
 
 
         return rootView;
@@ -185,10 +219,10 @@ public class MoviePosterFragment extends Fragment {
             case SORT_ORDER_HIGHEST_RATED:
                 //query top rated URL here
                 movieTask.execute(HIGHEST_RATED_URL); //gets the sort option from shared preferences
-               break;
+                break;
             case SORT_ORDER_FAVORITE:
-                Set<String> movieIds =  FavoritesManager.getInstance().getFavoriteMovies(getContext());
-                String[] args = movieIds.toArray(new String [movieIds.size()]);
+                Set<String> movieIds = FavoritesManager.getInstance().getFavoriteMovies(getContext());
+                String[] args = movieIds.toArray(new String[movieIds.size()]);
                 new FetchFavoritesTask().execute(args);
 
         }
@@ -201,8 +235,9 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateMovies();
-
+        if (mMovieImageAdapter == null || mMovieImageAdapter.isEmpty()) {
+            updateMovies();
+        }
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
@@ -384,14 +419,14 @@ public class MoviePosterFragment extends Fragment {
             final String API_KEY_PARAM = "api_key";
             List<Movie> movies = new ArrayList<>();
 
-            for (String movieId: params){
+            for (String movieId : params) {
 
                 try {
 
 
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(movieId)
-                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
-                        .build();
+                    Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(movieId)
+                            .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
+                            .build();
 
                     URL url = new URL(builtUri.toString());
 
@@ -473,7 +508,6 @@ public class MoviePosterFragment extends Fragment {
 
         }
     }
-
 
 
 }

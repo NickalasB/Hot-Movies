@@ -60,9 +60,6 @@ public class MovieDetailFragment extends Fragment {
     private RecyclerView reviewRecyclerView;
     private RecyclerView trailerRecyclerView;
 
-    //    private GridView trailerGridview;
-    private ImageView trailerImageView;
-
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -86,7 +83,6 @@ public class MovieDetailFragment extends Fragment {
         favoriteButton = (ToggleButton) rootView.findViewById(R.id.detail_favorite_button);
         movieReviewAuthorTitleTextView = (TextView) rootView.findViewById(R.id.detail_reviews_title_textView);
         movieReviewTitleTextView = (TextView) rootView.findViewById(R.id.details_review_title);
-        trailerImageView = (ImageView) rootView.findViewById(R.id.trailers_imageView);
 
 
         //where we handle the reviews RecyclerView
@@ -99,35 +95,30 @@ public class MovieDetailFragment extends Fragment {
         LinearLayoutManager trailersLm
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-
-        trailerRecyclerView.setHasFixedSize(true);
         trailerRecyclerView.setLayoutManager(trailersLm);
-
-
-        reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setLayoutManager(reviewsLm);
 
 
-
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(MainActivity.MOVIE)){
+        if (bundle != null && bundle.containsKey(MainActivity.MOVIE)) {
             movie = bundle.getParcelable(MainActivity.MOVIE);
-            if (movie != null){
+            if (movie != null) {
                 setUpFavoriteButtonAndLoadMovie(movie);
             }
         }
         return rootView;
     }
 
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-        setUpFavoriteButtonAndLoadMovie(movie);
-    }
-
     private void setUpFavoriteButtonAndLoadMovie(Movie movie) {
         setUpFavoriteButton(movie);
-        new FetchTrailerTask().execute(movie);
-        new FetchReviewsTask().execute(movie);
+        if(movie != null){
+            if (movie.reviews.isEmpty()) {
+                new FetchReviewsTask().execute(movie);
+            }
+            if (movie.trailers.isEmpty()) {
+                new FetchTrailerTask().execute(movie);
+            }
+        }
     }
 
 
@@ -145,12 +136,17 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+
+        super.onSaveInstanceState(outState);
+    }
+
     private void initializeTrailerAdapter() {
         List<Trailer> trailers = movie.trailers != null ? movie.trailers : new ArrayList<Trailer>();
         MovieTrailersAdapter trailerAdapter = new MovieTrailersAdapter(getActivity(), trailers);
         trailerRecyclerView.setAdapter(trailerAdapter);
-
-
     }
 
     private void initializeReviewAdapter() {
@@ -162,7 +158,7 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (movie != null){
+        if (movie != null) {
             displayMovie();
         }
     }
@@ -186,8 +182,6 @@ public class MovieDetailFragment extends Fragment {
         initializeReviewAdapter();
         initializeTrailerAdapter();
     }
-
-
 
 
     public class FetchTrailerTask extends AsyncTask<Movie, Void, List<Trailer>> {
@@ -305,10 +299,10 @@ public class MovieDetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Trailer> trailers) {
-            mMovie.setTrailers(trailers);
-            displayMovie();
-
-
+            if (getActivity() != null) {
+                mMovie.setTrailers(trailers);
+                displayMovie();
+            }
         }
 
     }
@@ -433,16 +427,16 @@ public class MovieDetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Reviews> reviews) {
-
-            mMovie.setReviews(reviews);
-            if (movie.reviews.size() == 0) {
-                movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
+            if (getActivity() != null) {
+                mMovie.setReviews(reviews);
+                if (movie.reviews.size() == 0) {
+                    movieReviewTitleTextView.setText(R.string.details_no_reviews_title);
+                }
+                if (movie.trailers.size() == 0) {
+                    movieScrollForTrailerTextView.setText(R.string.details_no_trailers_textview);
+                }
+                displayMovie();
             }
-            if (movie.trailers.size() == 0) {
-                movieScrollForTrailerTextView.setText(R.string.details_no_trailers_textview);
-            }
-            displayMovie();
-
         }
 
     }

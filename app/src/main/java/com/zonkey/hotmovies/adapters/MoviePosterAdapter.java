@@ -25,6 +25,10 @@ public class MoviePosterAdapter extends BaseAdapter {
         mMovieList = new ArrayList<>(movieList);
     }
 
+    public ArrayList<Movie> getMovieList(){
+        return new ArrayList<>(mMovieList);
+    }
+
     public int getCount() {
         return mMovieList.size();
     }
