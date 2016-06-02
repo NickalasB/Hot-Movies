@@ -15,17 +15,11 @@ public class Trailer implements Parcelable {
     public String type;
 
     public Trailer(String key) {
-//        this.id = id;
         this.key = key;
-//        this.name = name;
-//        this.site = site;
-//        this.type = type;
-
     }
 
     //this  constructs the base URL plus the "poster_path" defined in the API
     public String getTrailerURL() {
-
         return String.format("https://www.youtube.com/watch?v=%s", key);
 
     }
@@ -33,7 +27,6 @@ public class Trailer implements Parcelable {
 
     //this constructs the base trailerImage URL plus the key from the youtube trailer
     public String getTrailerImagerURL(){
-
         return String.format("http://img.youtube.com/vi/" + key + "/0.jpg");
     }
 

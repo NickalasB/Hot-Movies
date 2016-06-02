@@ -97,5 +97,4 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-
 }

@@ -56,7 +56,6 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         public void display(final Trailer trailer) {
             Picasso.with(mContext)
                     .load(trailer.getTrailerImagerURL())
-//                    .resize(160, 120)
                     .into(trailerImageView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,7 +63,6 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
                     Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
                     trailerIntent.setData(Uri.parse(trailer.getTrailerURL()));
                     mContext.startActivity(trailerIntent);
-
                 }
             });
 
@@ -74,10 +72,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         public ViewHolder(View itemView) {
             super(itemView);
             trailerImageView = (ImageView) itemView.findViewById(R.id.trailers_imageView);
-
         }
-
     }
-
 }
 

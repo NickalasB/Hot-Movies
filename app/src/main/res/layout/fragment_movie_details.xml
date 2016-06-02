@@ -9,14 +9,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="0dp">
 
 
         <ImageView
             android:id="@+id/detail_backdrop_imageView"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+             />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="Favorite:"
+                        android:text="@string/details_favorites_button_text"
                         android:textColor="@android:color/white" />
 
                     <ToggleButton
@@ -90,14 +92,8 @@
                         android:background="@android:drawable/btn_star"
                         android:textOff=""
                         android:textOn="" />
-
-
                 </LinearLayout>
-
-
             </LinearLayout>
-
-
         </LinearLayout>
 
         <TextView
@@ -123,7 +119,7 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingTop="16dp"
-            android:text="Overview:"
+            android:text="@string/details_overview_title"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold|italic" />
@@ -149,7 +145,7 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingTop="16dp"
-            android:text="Reviews:"
+            android:text="@string/details_yes_reviews_title"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold|italic" />

@@ -139,7 +139,7 @@ public class MoviePosterFragment extends Fragment {
                 else
                     item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_HIGHEST_RATED).apply();
-                getActivity().setTitle("Highest Rated");
+                getActivity().setTitle(getString(R.string.poster_fragment_highest_rated));
                 updateMovies();
                 return true;
             case R.id.action_popular:
@@ -148,7 +148,7 @@ public class MoviePosterFragment extends Fragment {
                 else
                     item.setChecked(true);
                 sharedPreferences.edit().putInt(SORT_ORDER, SORT_ORDER_POPULAR).apply();
-                getActivity().setTitle("Most Popular");
+                getActivity().setTitle(getString(R.string.poster_fragment_most_popular));
                 updateMovies();
                 return true;
             case R.id.action_favorite:
@@ -293,16 +293,8 @@ public class MoviePosterFragment extends Fragment {
             String posterJsonStr = null;
 
             try {
-//
-//                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-//                final String API_KEY_PARAM = "api_key";
-//
-//                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-//                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
-//                        .build();
 
                 URL url = new URL(params[0]);
-
 
                 // Create the request to MovieDB, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
