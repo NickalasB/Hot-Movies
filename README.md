@@ -28,13 +28,15 @@ This is the first iteration of the app- more features will be added
 ##Navigating the App##
 
 * When you launch the app you will be presented with a GridView of movie posters.
-* You can choose to view either the most popular movies or the highest rated movies by selecting your preferred option in the options menu in the upper right-hand corner.
-* Click on a movie that interests you and you'll be taken to a new activity that will give you some key info about your selected movie:
+* You can choose to view either the most popular movies, the highest rated movies, or a list of favorite movies by selecting your preferred option in the options menu in the upper right-hand corner.
+* Click on a movie that interests you and you'll be taken to a new activity or, if your're on a tablet, see a new display that will give you some key info about your selected movie:
    * Title
    * Release date
    * Average rating
    * Total ratings
    * Movie Summary
+   * Movie trailers
+   * Movie reviews
 
 Pretty cool!
 
