@@ -17,7 +17,7 @@ public class MovieReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_review);
-        setTitle("Reviews");
+        setTitle(getString(R.string.review_activity_title));
 
         movieReviewAuthorTitleTextView = (TextView) findViewById(R.id.detail_reviews_title_textView);
         movieReviewAuthorTextView = (TextView) findViewById(R.id.detail_reviews_author_textView);
@@ -29,7 +29,7 @@ public class MovieReviewActivity extends AppCompatActivity {
         String author_string = extras.getString("EXTRA_AUTHOR");
         String content_string = extras.getString("EXTRA_CONTENT");
 
-        movieReviewAuthorTextView.setText("Review by: " + author_string);
+        movieReviewAuthorTextView.setText(getString(R.string.review_activity_reviews_by_string) + " " + author_string);
         movieReviewsTextView.setText(content_string);
 
 

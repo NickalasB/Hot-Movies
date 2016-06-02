@@ -131,8 +131,6 @@ public class MovieDetailFragment extends Fragment {
                 } else {
                     FavoritesManager.getInstance().removeFavorite(movie.id, getContext());
                     Toast.makeText(getActivity(), getString(R.string.favorite_removed_toast), Toast.LENGTH_LONG).show();
-//                    MoviePosterFragment.updateMovies();
-
                 }
             }
         });
