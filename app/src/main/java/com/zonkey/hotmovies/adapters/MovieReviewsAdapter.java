@@ -47,7 +47,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         }
 
-        public void displayReview(final Reviews reviews){
+        public void displayReview(final Reviews reviews) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 Bundle extras = new Bundle();
 
@@ -96,6 +96,5 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
 
 }

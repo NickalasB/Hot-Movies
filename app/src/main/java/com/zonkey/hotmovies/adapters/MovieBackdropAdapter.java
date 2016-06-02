@@ -25,6 +25,7 @@ public class MovieBackdropAdapter extends BaseAdapter {
         mMovieList = new ArrayList<>(movieList);
     }
 
+
     @Override
     public int getCount() {
         return mMovieList.size();
@@ -49,7 +50,7 @@ public class MovieBackdropAdapter extends BaseAdapter {
 
             backdropImageView = new ImageView(mContext);
             backdropImageView.setAdjustViewBounds(true);
-            backdropImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            backdropImageView.setScaleType(ImageView.ScaleType.CENTER);
         } else {
             backdropImageView = (ImageView) convertView;
         }
@@ -59,6 +60,4 @@ public class MovieBackdropAdapter extends BaseAdapter {
 
         return backdropImageView;
     }
-
-
 }

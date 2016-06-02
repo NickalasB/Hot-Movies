@@ -56,4 +56,9 @@ public class FavoritesManager {
         editor.putStringSet(FAVORITE, mMovieIds);
         editor.apply();
     }
+
+    public Set<String> getFavoriteMovies(Context context){
+        makeSureFavoritesAreLoaded(context);
+        return new HashSet<>(mMovieIds);
+    }
 }

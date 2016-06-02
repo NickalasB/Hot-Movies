@@ -45,7 +45,6 @@ public class Movie implements Parcelable {
 
     //this  constructs the base URL plus the "poster_path" defined in the API
     public String getPosterURL() {
-
         return String.format("http://image.tmdb.org/t/p/w185%s", poster_path);
     }
 
@@ -54,8 +53,6 @@ public class Movie implements Parcelable {
     public String getBackdropURL() {
         return String.format("http://image.tmdb.org/t/p/w500%s", backdrop_path);
     }
-
-
 
 
     public void setTrailers(List<Trailer> trailers) {
