@@ -5,6 +5,8 @@
     <string name="action_popular">Most Popular</string>
     <string name="action_ratings">Highest Rated</string>
     <string name="action_favorite">Favorites</string>
+    <string name="action_share">Favorites</string>
+
 
 
     <!--MovieDetailActivity Strings-->
@@ -13,17 +15,32 @@
     <string name="details_reviews_title">Review</string>
     <string name="details_no_reviews_title">Reviews: No reviews yet!</string>
     <string name="details_no_trailers_textview">No trailers for this movie yet!</string>
-
-
-
-
-
-
+    <string name="details_favorites_button_text">Favorite:</string>
+    <string name="details_overview_title">Overview:</string>
+    <string name="details_yes_reviews_title">Reviews:</string>
+    <string name="details_release_date">Release date:</string>
+    <string name="details_avg_rating">Avg. Rating:</string>
+    <string name="details_total_ratings">Total Votes:</string>
 
 
     <!--MoviePosterFragment Strings-->
+    <string name="poster_fragment_highest_rated">Highest Rated</string>
+    <string name="poster_fragment_most_popular">Most Popular</string>
     <string name="poster_fragment_movies_error">Unable to retrieve movie data</string>
     <string name="favorites_fragment_movies_error">You don\'t have any movies saved yet</string>
+
+    <!--Favorites String-->
+    <string name="favorite_added_toast">Movie added to your favorites</string>
+    <string name="favorite_removed_toast">Movie removed from your favorites</string>
+
+<!--MovieReview String-->
+    <string name="review_activity_title">Reviews</string>
+    <string name="review_activity_reviews_by_string">Review by:</string>
+
+
+
+
+
 
 </resources>
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
@@ -50,10 +51,7 @@ public class MovieDetailFragment extends Fragment {
     ToggleButton favoriteButton;
     TextView movieScrollForTrailerTextView;
     TextView movieReviewAuthorTitleTextView;
-    //    TextView movieReviewAuthorTextView;
-//    TextView movieReviewsTextView;
     private Movie movie;
-    private Trailer trailer;
     TextView movieReviewTitleTextView;
 
 
@@ -111,7 +109,7 @@ public class MovieDetailFragment extends Fragment {
 
     private void setUpFavoriteButtonAndLoadMovie(Movie movie) {
         setUpFavoriteButton(movie);
-        if(movie != null){
+        if (movie != null) {
             if (movie.reviews.isEmpty()) {
                 new FetchReviewsTask().execute(movie);
             }
@@ -129,8 +127,10 @@ public class MovieDetailFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     FavoritesManager.getInstance().addFavorite(movie.id, getContext());
+                    Toast.makeText(getActivity(), getString(R.string.favorite_added_toast), Toast.LENGTH_LONG).show();
                 } else {
                     FavoritesManager.getInstance().removeFavorite(movie.id, getContext());
+                    Toast.makeText(getActivity(), getString(R.string.favorite_removed_toast), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -138,8 +138,6 @@ public class MovieDetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
-
         super.onSaveInstanceState(outState);
     }
 
@@ -164,6 +162,8 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
+
+
     private void displayMovie() {
         if (movie != null) {
             Picasso.with(getContext())
@@ -171,16 +171,18 @@ public class MovieDetailFragment extends Fragment {
                     .into(posterDetailImageView);
             Picasso.with(getContext())
                     .load(movie.getBackdropURL())
+                    .resize(500,280)
                     .into(backdropDetailImageView);
             movieScrollForTrailerTextView.setText(R.string.details_scroll_for_trailer);
             movieTitleTextView.setText(movie.title);
-            movieReleaseDateTextView.setText("Release date: " + movie.release_date);
-            movieRatingTextView.setText("Avg. Rating: " + movie.vote_average + "/10");
-            movieTotalRatingsTextView.setText("Total Ratings: " + movie.vote_count);
+            movieReleaseDateTextView.setText(getString(R.string.details_release_date) + " " + movie.release_date);
+            movieRatingTextView.setText(getString(R.string.details_avg_rating)+ " " + movie.vote_average + "/10");
+            movieTotalRatingsTextView.setText(getString(R.string.details_total_ratings) + " " + movie.vote_count);
             movieSummaryTextView.setText(movie.overview);
         }
         initializeReviewAdapter();
         initializeTrailerAdapter();
+
     }
 
 
@@ -209,8 +211,6 @@ public class MovieDetailFragment extends Fragment {
             }
 
             return trailerList;
-
-
         }
 
         @Override

@@ -60,6 +60,4 @@ public class MovieBackdropAdapter extends BaseAdapter {
 
         return backdropImageView;
     }
-
-
 }

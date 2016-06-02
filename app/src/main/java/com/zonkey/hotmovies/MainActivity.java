@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterFragme
         }
     }
 
-    // TODO: 5/26/16 What exactly do I want it to do onResume()?
     @Override
     protected void onResume() {
         super.onResume();
